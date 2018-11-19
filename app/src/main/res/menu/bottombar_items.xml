@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bMotivation"
+        android:icon="@drawable/ic_motivation"
+        android:title="Motivation" />
+    <item
+        android:id="@+id/bPuzzle"
+        android:icon="@drawable/ic_puzzle"
+        android:title="Puzzle" />
+    <item
+        android:id="@+id/bHome"
+        android:title="" />
+    <item
+        android:id="@+id/bGk"
+        android:icon="@drawable/ic_gk"
+        android:title="GK" />
+    <item
+        android:id="@+id/bSpdm"
+        android:icon="@drawable/ic_poll"
+        android:title="Speed Maths" />
+</menu>

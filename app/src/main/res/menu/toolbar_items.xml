@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/tShare"
+        android:title="Share"
+        android:icon="@drawable/ic_share"/>
+    <item android:id="@+id/tProfile"
+        android:title="Profile"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_user_check"/>
+    <item android:id="@+id/tSettings"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"/>
+
+
+</menu>

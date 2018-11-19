@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Categories">
+        <menu>
+            <item
+                android:id="@+id/nMotivation"
+                android:title="@string/Motivation"
+                android:icon="@drawable/ic_motivation"/>
+            <item
+                android:id="@+id/nGk"
+                android:title="@string/General_Knowledge"
+                android:icon="@drawable/ic_gk"/>
+            <item
+                android:id="@+id/nPuzzle"
+                android:title="@string/Puzzle"
+                android:icon="@drawable/ic_puzzle"/>
+            <item
+                android:id="@+id/nSpdm"
+                android:title="Speed Maths"
+                android:icon="@drawable/ic_poll"/>
+        </menu>
+    </item>
+
+    <item android:title="Extra Categories">
+        <menu>
+            <item
+                android:id="@+id/nPoll"
+                android:title="@string/Poll"
+                android:icon="@drawable/ic_user_check"/>
+            <item
+                android:id="@+id/nTofw"
+                android:title="Topic of the week"
+                android:icon="@drawable/ic_user_check"/>
+            <item
+                android:id="@+id/nMchallenge"
+                android:title="Weekend Challenge"
+                android:icon="@drawable/ic_user_check"/>
+        </menu>
+    </item>
+    <item android:title="Communication">
+        <menu>
+            <item
+                android:id="@+id/nShare"
+                android:title="Share App"
+                android:icon="@drawable/ic_user_check"/>
+            <item
+                android:id="@+id/nSuggest"
+                android:title="Feedback / Suggest Us"
+                android:icon="@drawable/ic_user_check"/>
+        </menu>
+    </item>
+    <item android:title="Social Login">
+        <menu>
+            <item
+                android:id="@+id/gLogout"
+                android:title="Logout Google"
+                android:icon="@drawable/ic_google">
+            </item>
+            <item
+                android:id="@+id/fbLogout"
+                android:title="Logout Facebook"
+                android:icon="@drawable/ic_facebook">
+            </item>
+        </menu>
+
+    </item>
+    <item android:title="About">
+        <menu>
+            <item
+                android:id="@+id/naboutUs"
+                android:title="About Us"
+                android:icon="@drawable/ic_user_check"/>
+            <item
+                android:id="@+id/naboutApp"
+                android:title="About the App"
+                android:icon="@drawable/ic_user_check"/>
+            <item
+                android:id="@+id/nFaq"
+                android:title="FAQ"
+                android:icon="@drawable/ic_user_check"/>
+            <item
+                android:id="@+id/nReachus"
+                android:title="Reach Us"
+                android:icon="@drawable/ic_user_check"/>
+        </menu>
+    </item>
+
+</menu>

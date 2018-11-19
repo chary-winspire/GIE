@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorNavIcon">#ffffff</color>
+    <color name="colorNavText">#01294b</color>
+
+    <color name="ColorRed">#f20b3d</color>
+    <color name="GoldenYellow">#fdfd41</color>
+    <color name="KFCRed">#a3080c</color>
+    <color name="LightDarkWhite">#e9e7e7</color>
+
+    <color name="ColorWhite">#FFFFFF</color>
+    <color name="ColorBlack">#FF615D5D</color>
+    <color name="ColorGrey">#0abbb5</color>
+    <color name="ColorLightGrey">#FFE6E1E0</color>
+
+    <color name="LiteBlack">#393434</color>
+    <color name="Black">#000000</color>
+    <color name="White">#FFFFFF</color>
+    <color name="LiteWhite">#f9f0f0</color>
+    <color name="GoogleRed">#db3236</color>
+    <color name="FacebookBlue">#3B5998</color>
+    <color name="TwitterBlue">#1DA1F2</color>
+    <color name="LiteBlueDark">#008fe7</color>
+    <color name="GooglePlusRed">#DB4437</color>
+    <color name="LiteGreen">#40fd1a</color>
+    <color name="LitePurpul">#a45aec</color>
+    <color name="LitePink">#de419e</color>
+    <color name="LiteBlue">#92fffc</color>
+
+
+    <color name="Header">#181818</color>
+    <color name="PageBackground">#e3e3e3</color>
+
+    <color name="LiteRedBTN">#FFF15458</color>
+
+    <color name="bottom_bar_selector">#f45637</color>
+    <color name="colorGray">#ccc</color>
+
+
+</resources>

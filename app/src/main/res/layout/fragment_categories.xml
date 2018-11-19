@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".CategoriesFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/cateMotivation"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/cat_motivation">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/Cat_Moti_Title"
+                    android:textStyle="bold"
+                    android:textColor="@color/White"
+                    android:textSize="24sp" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/White" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/Cat_Moti_Des"
+                        android:textColor="@color/LiteWhite"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/round_shape"
+                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/cateSpdm"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/cat_spdm">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/Cat_SPDM_Title"
+                    android:textColor="@color/White"
+                    android:textSize="24sp" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/LiteWhite" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/Cat_SPDM_Des"
+                        android:textColor="@color/LiteWhite"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/round_shape"
+                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/cateGk"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/cat_gk">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/Cat_GK_Title"
+                    android:textColor="@color/White"
+                    android:textSize="24sp" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/LiteGreen" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/Cat_GK_Des"
+                        android:textColor="@color/LiteWhite"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/round_shape"
+                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/catePuzzle"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/cat_puzzle">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/Cat_Puzzle_Title"
+                    android:textColor="@color/White"
+                    android:textSize="24sp" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/LiteGreen" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/Cat_Puzzle_Des"
+                        android:textColor="@color/LiteWhite"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/round_shape"
+                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/catePoll"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/cat_poll">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/Cat_Poll_Title"
+                    android:textColor="@color/White"
+                    android:textSize="24sp" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/LiteGreen" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/Cat_Poll_Des"
+                        android:textColor="@color/LiteWhite"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/round_shape"
+                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/cateTofw"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@drawable/cat_tofw">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="40dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/Cat_TofW_Title"
+                    android:textColor="@color/White"
+                    android:textSize="24sp" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/LiteGreen" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/Cat_TofW_Des"
+                        android:textColor="@color/LiteWhite"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/round_shape"
+                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/cateReminder"
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="120dp">
+
+                <ImageView
+                    android:src="@drawable/alarmclock"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent" />
+
+                <LinearLayout
+                    android:weightSum="3"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:text="REMINDER"
+                        android:textSize="24sp"
+                        android:textColor="@color/Black"
+                        android:gravity="center"
+                        android:layout_weight="2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp" />
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:text="Reminder Motivation Text"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

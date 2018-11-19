@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    tools:context=".GKFragment">
+
+    <RelativeLayout
+        android:id="@+id/mainGKlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/questionGk"
+            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="General Knowledge Question"
+            android:textColor="@color/LiteGreen"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rgroupGk"
+            android:layout_width="match_parent"
+            android:layout_height="184dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/questionGk">
+
+            <RadioButton
+                android:id="@+id/gkOp1"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option One"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/gkOp2"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option Two"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/gkOp3"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option Three"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/gkOp4"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option Four"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/ansLayoutGK"
+            android:orientation="vertical"
+            android:weightSum="2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_below="@id/questionGk"
+            android:layout_height="184dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Your Answer"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/userAnsGK"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textSize="26sp"
+                    android:textStyle="normal"
+                    android:text="User Answer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="Correct Answer is: "
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/correctAnsGK"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textSize="26sp"
+                    android:textStyle="normal"
+                    android:textColor="@color/LiteGreen"
+                    android:text="Correct Answer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:textColor="@color/White"
+            android:text="Submit"
+            android:id="@+id/submitGk"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="52dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="77dp" />
+
+        <Button
+            android:textColor="@color/White"
+            android:text="Next"
+            android:id="@+id/nextGk"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="52dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="77dp" />
+
+        <Button
+            android:textColor="@color/White"
+            android:id="@+id/previousGk"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="194dp"
+            android:layout_marginBottom="52dp"
+            android:text="Back" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listviewGK"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
+</RelativeLayout>

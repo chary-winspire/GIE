@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:gravity="center"
+    tools:context=".PuzzleFragment">
+
+    <RelativeLayout
+        android:id="@+id/layoutPuzzle"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/questionPuzzle"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:gravity="center"
+            android:text="Puzzle Question"
+            android:textColor="@color/Black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rgroupPuzzle"
+            android:layout_width="match_parent"
+            android:layout_height="184dp"
+            android:layout_below="@id/questionPuzzle">
+
+            <RadioButton
+                android:id="@+id/puzzleOp1"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option One"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/puzzleOp2"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option Two"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/puzzleOp3"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option Three"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/puzzleOp4"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:text="Option Four"
+                android:textColor="@color/TwitterBlue"
+                android:textSize="20sp" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/ansLayout"
+            android:orientation="vertical"
+            android:weightSum="2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_below="@id/questionPuzzle"
+            android:layout_height="184dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Your Answer"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/userAnsPuzzle"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textSize="26sp"
+                    android:textStyle="normal"
+                    android:text="User Answer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="Correct Answer is: "
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/correctAnsPuzzle"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textSize="26sp"
+                    android:textStyle="normal"
+                    android:textColor="@color/LiteGreen"
+                    android:text="Correct Answer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/explanationPuzzle"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_below="@+id/questionPuzzle"
+            android:layout_marginTop="185dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="Puzzle Explanation"
+            android:textColor="@color/LiteGreen"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/submitPuzzle"
+            android:layout_width="280dp"
+            android:layout_height="48dp"
+            android:layout_below="@+id/rgroupPuzzle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="submit" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutBtnStartPuzzle"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/startPuzzle"
+            android:gravity="center"
+            android:text="Start"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="@color/White"
+            android:layout_width="280dp"
+            android:layout_height="48dp" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

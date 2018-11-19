@@ -1,0 +1,116 @@
+<resources>
+    <string name="app_name">AndroidPushNotification</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="winspire_name">Winspire Magazine</string>
+    <string name="winspire_logo">Winspire Logo</string>
+
+    <string name="Login">Login</string>
+    <string name="Register">Register</string>
+    <string name="Continue">Continue as a Guest</string>
+
+    <string name="activity_images">Activity Images</string>
+    <string name="icons_images">Icons Images</string>
+
+    <string name="user_image">user_image</string>
+    <string name="user_name">User Name</string>
+    <string name="user_email">User Email</string>
+
+    <string name="Motivation">Motivation</string>
+    <string name="Topic_of_the_Day">Topic of the Day</string>
+    <string name="Puzzle">Puzzle</string>
+    <string name="General_Knowledge">General Knowledge</string>
+    <string name="Poll">Poll</string>
+    <string name="Extra">Extra</string>
+
+    <string name="Personalization">Personalization</string>
+    <string name="Settings">Settings</string>
+    <string name="Profile">Profile</string>
+    <string name="reach_us">Reach Us</string>
+    <string name="About_us">About Us</string>
+    <string name="about_app">About APP</string>
+    <string name="Share">Share</string>
+
+    <string name="fragment_img">fragment image</string>
+    <string name="Moti_Descrip">Motivation Description</string>
+    <string name="Topic_Descrip">Topic of the Day Description</string>
+    <string name="Puzzle_Question">Puzzle Question</string>
+    <string name="GK_Question">General Knowledge Question</string>
+    <string name="GK_Descrip">General Knowledge Description / Solution</string>
+
+    <string name="Option_1GK">Option 1</string>
+    <string name="Option_2GK">Option 2</string>
+    <string name="Option_3GK">Option 3</string>
+    <string name="Option_4GK">Option 4</string>
+    <string name="Submit_GK">Submit</string>
+
+    <string name="Option_1Puzzle">Option 1</string>
+    <string name="Option_2Puzzle">Option 2</string>
+    <string name="Option_3Puzzle">Option 3</string>
+    <string name="Option_4Puzzle">Option 4</string>
+    <string name="Submit_Puzzle">Submit</string>
+
+    <string name="Menu">Activity Menu</string>
+
+    <string name="Google_Name">Google User Name</string>
+    <string name="Google_Email">Google User Email ID</string>
+    <string name="Not_This">Not This Account</string>
+    <string name="Get_Google">Get Your Google Id Details</string>
+    <string name="Get_Facebook">Get Your Facebook Id Details</string>
+    <string name="Login_Text">Login Page Text</string>
+
+    <string name="share_content">Hey there! Take a look at the app.Here is the link to the app:</string>
+    <string name="share_link">https://www.google.co.in</string>
+    <string name="enjoy_share_content">Steps: click on install and enjoy.</string>
+
+    <string name="facebook_app_id">939341479588507</string>
+    <string name="fb_login_protocol_scheme">fb939341479588507</string>
+
+    <!-- The class name to the ScrollingChildBehavior required for AppBarLayout -->
+    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="error_field_required">This field is required</string>
+    <string name="error_emailid_field_required">This emailId field is required</string>
+    <string name="error_mobile_field_required">This Mobile No. field is required</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_Mobile">This Mobile Number is incorrect</string>
+    <string name="error_invalid_Name">This Name is invalid</string>
+    <string name="error_invalid_School">Please Enter Valid School Name</string>
+    <string name="error_invalid_Class">Please Enter Valid Class Details</string>
+
+    <string-array name="SpinnerItems">
+        <item>I am a Student</item>
+        <item>I am a Parent</item>
+        <item>I am a Principal / Headmaster</item>
+        <item>School</item>
+        <item>Librarian</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="Gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string name="Date_Picker">Date Picker</string>
+
+    <string name="Cat_Moti_Title">Daily Kick Start</string>
+    <string name="Cat_Moti_Des">Kick Start your morning everyday and makes the most of each day in your life!</string>
+    <string name="Cat_SPDM_Title">How Smart Are You Toaday ?</string>
+    <string name="Cat_SPDM_Des">Find out how smart you are(and increase your IQ)with our classical IQ test.</string>
+    <string name="Cat_GK_Title">Daily GK Digest</string>
+    <string name="Cat_GK_Des">Enhance your general knowledge everyday with our Daily GK Digest. 5 questions everyday!</string>
+    <string name="Cat_Puzzle_Title">Can You Solve It?</string>
+    <string name="Cat_Puzzle_Des">Come back every day and see if you can solve our Daily puzzles. One puzzle everyday!</string>
+    <string name="Cat_Poll_Title">The poll of the Day</string>
+    <string name="Cat_Poll_Des">Find out what your friends thinks by answering the poll question everyday</string>
+    <string name="Cat_TofW_Title">The topic of the Week</string>
+    <string name="Cat_TofW_Des">Educate students with various concepts every week.</string>
+
+
+</resources>
