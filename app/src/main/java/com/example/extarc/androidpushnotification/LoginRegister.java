@@ -237,15 +237,14 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
             }
         });
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
+
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 
         //  LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
         GSignin = findViewById(R.id.googleLogin);
         GSignin.setOnClickListener(this);
-
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -253,7 +252,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     }
 
     public void HandleResult(GoogleSignInResult result) {
-
+        Log.d(TAG, "googleSignInFailure"+result.isSuccess()+","+result.getStatus());
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
             String name = account.getDisplayName();
@@ -285,17 +284,14 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     }
 
     public void SignIn() {
-        if (googleApiClient != null) {
-            googleApiClient.disconnect();
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
             startActivityForResult(intent, REQ_CODE);
-        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d(TAG, "googleSignInFailure"+requestCode);
         if (requestCode == REQ_CODE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             HandleResult(result);
@@ -306,7 +302,6 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 // Could not connect to Google Play Services.  The user needs to select an account,
         // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
         // ConnectionResult to see possible error codes.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
 
         if (!mIsResolving && mShouldResolve) {
             if (connectionResult.hasResolution()) {
