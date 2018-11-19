@@ -11,8 +11,8 @@ public interface ApplicationConstants {
     //static final String SERVER_PATH = "http://extarc-vm.cloudapp.net/JDWebServiceLocal/jbsdservice.svc";
 
     // local
-     static final String SERVER_PATH = "http://192.168.1.8:8080/Notifications/";
-     static final String SERVER_IMAGE_PATH = "http://192.168.1.8:8080/Notifications/";
+     static final String SERVER_PATH = "http://192.168.1.11:8080/Notifications/";
+     static final String SERVER_IMAGE_PATH = "http://192.168.1.11:8080/Notifications/";
 
     static final String CLIENT_LOGO_PATH = "http://beta.jobsdialog.com/smewebsite";
     // Google Project Number

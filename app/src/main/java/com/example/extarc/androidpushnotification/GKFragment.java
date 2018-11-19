@@ -107,9 +107,20 @@ public class GKFragment extends Fragment {
 //                            for (int i = 0; i < rgroupGK.getChildCount(); i++) {
 //                                rgroupGK.getChildAt(i).setEnabled(false);
 //                            }
+                        String userAnswer=null;
+                        if(option1.isChecked()){
+                            userAnswer= option1.getText().toString();
+                        } else if(option2.isChecked()){
+                            userAnswer= option2.getText().toString();
+                        }else if(option3.isChecked()){
+                            userAnswer= option3.getText().toString();
+                        }else if(option4.isChecked()){
+                            userAnswer= option4.getText().toString();
+                        }
 
+                        arryJobDetails.get(4).setUserAnswer(userAnswer);
                         ListView listView = Objects.requireNonNull(getActivity()).findViewById(R.id.listviewGK);
-                        CustomAdapterGK customAdapter = new CustomAdapterGK();
+                        CustomAdapterGK customAdapter = new CustomAdapterGK(arryJobDetails);
                         listView.setAdapter(customAdapter);
                         listView.setVisibility(View.VISIBLE);
 
@@ -150,25 +161,104 @@ public class GKFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                if (count > 0) {
-                count = count - 1;
+                if (count > 0) {
 
-                setQuestionView();
+
+                    count = count - 1;
+                    question.setText(arryJobDetails.get(count).getQuestion());
+                    option1.setText(arryJobDetails.get(count).getOption1());
+                    option2.setText(arryJobDetails.get(count).getOption2());
+                    option3.setText(arryJobDetails.get(count).getOption3());
+                    option4.setText(arryJobDetails.get(count).getOption4());
+                    Log.i(TAG, " *** getQuestionnaire started"+arryJobDetails.get(count).getUserAnswer());
+                    if(arryJobDetails.get(count).getUserAnswer()!=null && arryJobDetails.get(count).getUserAnswer().length()>0 ){
+                        if(option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                            Log.i(TAG, " *** getQuestionnaire started"+arryJobDetails.get(count).getUserAnswer());
+                            radioGroup.clearCheck();
+                            option1.setChecked(true);
+
+                            Log.i(TAG, " *** getQuestionnaire started"+   option1.isChecked());
+                        } else if(option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                            radioGroup.clearCheck();
+                            option2.setChecked(true);
+                        }else if(option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                            radioGroup.clearCheck();
+                            option3.setChecked(true);
+                        }else if(option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                            radioGroup.clearCheck();
+                            option4.setChecked(true);
+                        }
+
+                    }
+                }
                 CountControll();
+
             }
         });
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(TAG, " *** getQuestionnaire started"+radioGroup.getCheckedRadioButtonId());
 //                if (count > 0 || count == 0) {
-                count = count + 1;
+                if (count > 0 || count == 0) {
+                    String userAnswer=null;
+                    if(option1.isChecked()){
+                        userAnswer= option1.getText().toString();
+                    } else if(option2.isChecked()){
+                        userAnswer= option2.getText().toString();
+                    }else if(option3.isChecked()){
+                        userAnswer= option3.getText().toString();
+                    }else if(option4.isChecked()){
+                        userAnswer= option4.getText().toString();
+                    }
 
-                setQuestionView();
+                    arryJobDetails.get(count).setUserAnswer(userAnswer);
+                    Log.i(TAG, " *** getQuestionnaire started"+  arryJobDetails.get(count).getUserAnswer());
+                    count = count + 1;
+                    question.setText(arryJobDetails.get(count).getQuestion());
+                    option1.setText(arryJobDetails.get(count).getOption1());
+                    option2.setText(arryJobDetails.get(count).getOption2());
+                    option3.setText(arryJobDetails.get(count).getOption3());
+                    option4.setText(arryJobDetails.get(count).getOption4());
+
+                    Log.i(TAG, " *** getQuestionnaire started"+  arryJobDetails.get(count).getUserAnswer());
+                    if(arryJobDetails.get(count).getUserAnswer()!=null && arryJobDetails.get(count).getUserAnswer().length()>0 ){
+                       if(option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                           radioGroup.clearCheck();
+                           option1.setChecked(true);
+                       } else if(option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                           radioGroup.clearCheck();
+                           option2.setChecked(true);
+                       }else if(option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                           radioGroup.clearCheck();
+                           option3.setChecked(true);
+                       }else if(option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
+                           radioGroup.clearCheck();
+                           option4.setChecked(true);
+                       }
+
+                    }else{
+                        radioGroup.clearCheck();
+                        option1.setChecked(false);
+                        option2.setChecked(false);option3.setChecked(false);option4.setChecked(false);
+
+                    }
+
+//                    int selectedId = Answer.getCheckedRadioButtonId();
+//                    radioButton = view.findViewById(selectedId);
+//                    Toast.makeText(getActivity(), radioButton.getText(), Toast.LENGTH_SHORT).show();
+                }
+
+//
+//
+//                count = count + 1;
+//
+//                setQuestionView();
                 CountControll();
 
-                int selectedId = radioGroup.getCheckedRadioButtonId();
-                RadioButton answer = (RadioButton) view.findViewById(selectedId);
-                radioGroup.clearCheck();
+
+
 
             }
 
@@ -184,6 +274,13 @@ public class GKFragment extends Fragment {
     }
 
     class CustomAdapterGK extends BaseAdapter {
+        private ArrayList<Questionnaire> arrayList;
+        private Context context;
+
+        public CustomAdapterGK(ArrayList<Questionnaire> arrayList) {
+            this.context = context;
+            this.arrayList = arrayList;
+        }
 
         @Override
         public int getCount() {
@@ -210,9 +307,10 @@ public class GKFragment extends Fragment {
             TextView correctAns = convertView.findViewById(R.id.correctAnswer);
             TextView explanation = convertView.findViewById(R.id.explanation);
 
-            question.setText(arryJobDetails.get(count).getQuestion());
-            correctAns.setText(arryJobDetails.get(count).getAnswer());
-            explanation.setText(arryJobDetails.get(count).getComment());
+            question.setText(arrayList.get(position).getQuestion());
+            userAns.setText(arrayList.get(position).getUserAnswer());
+            correctAns.setText(arrayList.get(position).getAnswer());
+            explanation.setText(arrayList.get(position).getComment());
 
             if ((userAns.getText().toString().equals(correctAns.getText().toString()))) {
                 userAns.setTextColor(Color.parseColor("#40fd1a"));
