@@ -10,9 +10,12 @@ public interface ApplicationConstants {
    // static final String SERVER_IMAGE_PATH = "http://extarc-vm.cloudapp.net/JDWebService/images";
     //static final String SERVER_PATH = "http://extarc-vm.cloudapp.net/JDWebServiceLocal/jbsdservice.svc";
 
-    // local
-     static final String SERVER_PATH = "http://192.168.1.11:8080/Notifications/";
-     static final String SERVER_IMAGE_PATH = "http://192.168.1.11:8080/Notifications/";
+    // cloud path
+     static final String SERVER_PATH = "http://ec2-3-16-123-197.us-east-2.compute.amazonaws.com:8080/Notifications/";
+     static final String SERVER_IMAGE_PATH = "http://ec2-3-16-123-197.us-east-2.compute.amazonaws.com:8080/Notifications/";
+// local path
+//    static final String SERVER_PATH = "http://192.168.1.2:8080/Notifications/";
+//    static final String SERVER_IMAGE_PATH = "http://192.168.1.2:8080/Notifications/";
 
     static final String CLIENT_LOGO_PATH = "http://beta.jobsdialog.com/smewebsite";
     // Google Project Number

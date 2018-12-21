@@ -80,8 +80,8 @@ public class FirstActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
+
     public void onResume() {
         super.onResume();
 

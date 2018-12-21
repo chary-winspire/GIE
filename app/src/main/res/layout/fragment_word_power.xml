@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="50dp"
+    android:layout_marginBottom="50dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/wpRecylerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        android:id="@+id/WordPowerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/wpTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/LiteRedBTN"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:paddingRight="40dp"
+            android:textStyle="bold"
+            android:text="dapper [ DAP-er ]"
+            android:textColor="#fff" />
+
+        <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+            android:id="@+id/expandableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/wpTitle"
+            android:background="#909af1e9"
+            android:padding="16dp"
+            app:ael_duration="400"
+            app:ael_expanded="true"
+            app:ael_interpolator="bounce"
+            app:ael_orientation="vertical">
+
+            <TextView
+                android:id="@+id/wpMeaning"
+                android:textColor="@color/Black"
+                android:text="@string/WPMeaning"
+                android:layout_marginBottom="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_below="@+id/wpMeaning"
+                android:background="@color/Black"
+                android:layout_marginBottom="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                android:id="@+id/wpExample"
+                android:layout_below="@+id/divider"
+                android:textColor="@color/Black"
+                android:text="@string/WPExample"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -6,26 +6,31 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.extarc.androidpushnotification.Models.Questionnaire;
 import com.github.lzyzsd.circleprogress.DonutProgress;
@@ -36,252 +41,204 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
+import static com.example.extarc.androidpushnotification.MasterActivity.bottomNavigation;
+import static com.example.extarc.androidpushnotification.MasterActivity.drawerLayout;
+import static com.example.extarc.androidpushnotification.MasterActivity.fab;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbar;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle2;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SpeedMathsFragment extends Fragment implements View.OnClickListener {
+public class SpeedMathsFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     Button back, next;
-    private Button StartTimer, start, submit;
+    private Button start, submit;
+    TextView StartTimer;
+    TextView queNo;
+    TextView questionNo;
 
-    private long timeleft = 10000;
-    private boolean TimerRunning;
+    RelativeLayout mainlayoutSpdm, startSpdmlayout;
+
+    private int timeleft = 150000;
     ArrayList<Questionnaire> arryJobDetails = new ArrayList<>();
     private final String TAG = "SpeedMathsFragment";
     private String questionnaireListStr = null;
 
-    RelativeLayout mainscreen;
-    LinearLayout resultscreen;
-
     DonutProgress donutProgress;
-    int variable = 0;
-    public int visibility = 0, one = 0, two = 0;
-
-    int score = 0;
-    int qid = 0;
+    CountDownTimer countDownTimer;
+    private static final String FORMAT = "%02d:%02d:%02d";
+    Animation animation, queAnim;
 
     public SpeedMathsFragment() {
         // Required empty public constructor
     }
 
     TextView question;
-    EditText answer;
+    RadioButton option1, option2, option3, option4;
+    RadioGroup radioGroup;
     int count = 0;
+    int ID = 1;
+    public SharedPreferences preferences;
+    int Score = 0;
+    int Wrong = 0;
+    int NotAttempted = 0;
+
+    SeekBar seekbarTimer;
+
+    String SERVICE_URI = ApplicationConstants.SERVER_PATH;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.speedmaths_view, container, false);
+        final View myview = inflater.inflate(R.layout.speedmaths_view, container, false);
 
-        question = view.findViewById(R.id.questionSpdm);
-        answer = view.findViewById(R.id.ansSpdm);
-        back = view.findViewById(R.id.previousSpdm);
-        next = view.findViewById(R.id.nextSpdm);
-        StartTimer = view.findViewById(R.id.timerSpdm);
-        start = view.findViewById(R.id.startSpdm);
-        submit = view.findViewById(R.id.submitSpdm);
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.setMargins(0, 0, 0, 0);
+        toolbar.setLayoutParams(layoutParams);
+//        toolbar.setTitle("Speed Maths");
+        toolbartitle2.setVisibility(View.VISIBLE);
+        toolbartitle.setVisibility(View.INVISIBLE);
+        toolbartitle2.setText("Speed Math");
+        toolbartitle2.setTextColor(getResources().getColor(R.color.Black));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.SPDM_Toolbar));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.Black));
+        }
+        bottomNavigation.setVisibility(View.GONE);
+        fab.setVisibility(View.VISIBLE);
+        toolbar.setNavigationIcon(null);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
 
-        Button One = view.findViewById(R.id.btnOne);
-        Button Two = view.findViewById(R.id.btnTwo);
-        final Button Three = view.findViewById(R.id.btnThree);
-        Button Four = view.findViewById(R.id.btnFour);
-        Button Five = view.findViewById(R.id.btnFive);
-        Button Six = view.findViewById(R.id.btnSix);
-        Button Seven = view.findViewById(R.id.btnSeven);
-        Button Eight = view.findViewById(R.id.btnEight);
-        Button Nine = view.findViewById(R.id.btnNine);
-        Button Zero = view.findViewById(R.id.btnZero);
-        Button Clear = view.findViewById(R.id.btnClear);
-        Button Dot = view.findViewById(R.id.btnDot);
+        preferences = getActivity().getSharedPreferences(Constants.SP_PERSISTENT_VALUES,
+                Context.MODE_PRIVATE);
+        ID = Integer.valueOf(preferences.getString(Constants.SPEED_MATHS, "1"));
+        back = myview.findViewById(R.id.previousSpdm);
+        next = myview.findViewById(R.id.nextSpdm);
+        StartTimer = myview.findViewById(R.id.timerSpdm);
+        start = myview.findViewById(R.id.startSpdm);
+        submit = myview.findViewById(R.id.submitSpdm);
+        queNo = myview.findViewById(R.id.queNo);
+        questionNo = myview.findViewById(R.id.questionCount);
+        questionNo.setText("0/10");
 
-        mainscreen = view.findViewById(R.id.firstSPdm);
-//        resultscreen = view.findViewById(R.id.secSPdm);
+        question = myview.findViewById(R.id.questionSpdm);
+        option1 = myview.findViewById(R.id.spdmOp1);
+        option2 = myview.findViewById(R.id.spdmOp2);
+        option3 = myview.findViewById(R.id.spdmOp3);
+        option4 = myview.findViewById(R.id.spdmOp4);
+        radioGroup = myview.findViewById(R.id.rgroupSpdm);
 
-        donutProgress = (DonutProgress) view.findViewById(R.id.donut_progress);
-        donutProgress.setMax(100);
-        donutProgress.setFinishedStrokeColor(Color.parseColor("#FFFB385F"));
-        donutProgress.setTextColor(Color.parseColor("#FFFB385F"));
-        donutProgress.setKeepScreenOn(true);
+        radioGroup.setOnCheckedChangeListener(this);
 
-        final SeekBar seekBar = view.findViewById(R.id.seekbarSpdm);
+//        donutProgress = (DonutProgress) myview.findViewById(R.id.donut_progress);
+//        donutProgress.setMax(100);
+//        donutProgress.setFinishedStrokeColor(Color.parseColor("#FFFB385F"));
+//        donutProgress.setTextColor(Color.parseColor("#FFFB385F"));
+//        donutProgress.setKeepScreenOn(true);
+
+        mainlayoutSpdm = myview.findViewById(R.id.mainSpdmLayout);
+        startSpdmlayout = myview.findViewById(R.id.layoutBtnStartSpdm);
+
+        final SeekBar seekBar = myview.findViewById(R.id.seekbarSpdm);
         seekBar.setProgress(0);
         seekBar.setMax(10);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressChangedValue = 0;
+        seekBar.setClickable(false);
+        seekBar.setFocusable(false);
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressChangedValue++;
-                progressChangedValue = progress;
-            }
+        seekbarTimer = myview.findViewById(R.id.seekbarSpdmtimer);
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getContext(), "Seek bar progress is :" + progressChangedValue,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        One.setOnClickListener(this);
-        Two.setOnClickListener(this);
-        Three.setOnClickListener(this);
-        Four.setOnClickListener(this);
-        Five.setOnClickListener(this);
-        Six.setOnClickListener(this);
-        Seven.setOnClickListener(this);
-        Eight.setOnClickListener(this);
-        Nine.setOnClickListener(this);
-        Zero.setOnClickListener(this);
-        Clear.setOnClickListener(this);
-        Dot.setOnClickListener(this);
-
-        final ArrayList<String> userAnsw = new ArrayList<>();
-        userAnsw.add(answer.getText().toString());
-
-        StartTimer.setOnClickListener(this);
+        startSpdmlayout.setVisibility(View.VISIBLE);
+        mainlayoutSpdm.setVisibility(View.GONE);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starttimer();
-                getQuestionnaire(1, "SPDM");
+
+                toolbartitle.setVisibility(View.INVISIBLE);
+                toolbartitle2.setVisibility(View.VISIBLE);
+                toolbartitle2.setText("Speed Math");
+                fab.setVisibility(View.GONE);
+
+                Animation startanim = AnimationUtils.loadAnimation(getContext(), R.anim.lefttorightin);
+                getQuestionnaire(ID, "SPDM");
+                Animation();
+                startQueAnimation();
                 CountControll();
-                start.setVisibility(View.INVISIBLE);
-                submit.setVisibility(View.VISIBLE);
+                startSpdmlayout.setVisibility(View.GONE);
+                mainlayoutSpdm.setVisibility(View.VISIBLE);
+                submit.setVisibility(View.INVISIBLE);
                 seekBar.setProgress(1);
-                donutProgress.setVisibility(View.VISIBLE);
-                final SharedPreferences shared = getActivity().getSharedPreferences("Score", Context.MODE_PRIVATE);
-//                one++;
-                new CountDownTimer(60000, 1000) {//countdowntimer
-                    int i = 100;
+                startcountdown();
 
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        i = i - 1;
-                        donutProgress.setProgress(i);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        SharedPreferences.Editor editor = shared.edit();//here we are saving the data when the countdown timer will finish and it is saved in shared prefrence file that is defined in onCreate method as score
-                        donutProgress.setProgress(0);
-                        if (variable == 0) {
-                            Intent intent = new Intent(getActivity(), ResultActivity.class);
-                            intent.putExtra("correct", two);
-                            intent.putExtra("attemp", one);
-                            startActivity(intent);
-                        }
-                    }
-                }.start();
-
+//                if (question.getText().toString().isEmpty()) {
+////                    start.startAnimation(startanim);
+//                    start.setText("Loding...");
+//                    start.setAllCaps(false);
+//                }else {
+//                    Animation();
+//                    startQueAnimation();
+//                    CountControll();
+//                    startSpdmlayout.setVisibility(View.GONE);
+//                    mainlayoutSpdm.setVisibility(View.VISIBLE);
+//                    submit.setVisibility(View.INVISIBLE);
+//                    seekBar.setProgress(1);
+//                    startcountdown();
+//                }
             }
         });
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (answer.getText().toString().isEmpty()) {
-
-                    Toast.makeText(getActivity(), "Please complete and try again", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-                    builder.setTitle("Are Sure you want to submit");
-                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            if (arryJobDetails.get(count).getAnswer().equals(answer.getText())) {
-                                score++;
-                                Log.d("score", "Your score" + score);
-                            }
-
-                            Intent intent = new Intent(getActivity(), ResultActivity.class);
-                            intent.putExtra("UserAnswers", userAnsw);
-                            startActivity(intent);
-
-//                            Intent intent = new Intent(getActivity(), ResultActivity.class);
-//                            Bundle b = new Bundle();
-//                            b.putInt("score", score); //Your score
-//                            intent.putExtras(b); //Put your score to your next Intent
-//                            startActivity(intent);
-
-//                            ListView listView = view.findViewById(R.id.listviewSPDM);
-//                            CustomAdapterSPDM customAdapter = new CustomAdapterSPDM();
-//                            listView.setAdapter(customAdapter);
-//                            listView.setVisibility(View.VISIBLE);
-
-//                            Questionnaire questionnaire = new Questionnaire();
-//                            questionnaire.setUserAnswer(answer.getText().toString());
-
-//                            RecyclerView recyclerView;
-//                            RecyclerView.Adapter customAdapterSPDM;
-//                            RecyclerView.LayoutManager mLayoutManager;
-//                            recyclerView = view.findViewById(R.id.recyclerSpdm);
-//                            recyclerView.setVisibility(View.VISIBLE);
-//
-//                            mainscreen.setVisibility(View.INVISIBLE);
-//                            resultscreen.setVisibility(View.VISIBLE);
-
-//                            TextView userAns, correctAns, question;
-//                            userAns = view.findViewById(R.id.spdmUserAns);
-//                            correctAns = view.findViewById(R.id.spdmCorrAns);
-//                            question = view.findViewById(R.id.spdmQuestion);
-//
-//                            answer.getText().toString();
-//                            userAns.setText(answer.getText().toString());
-//                            correctAns.setText(arryJobDetails.get(count).getAnswer());
-//                            question.setText(arryJobDetails.get(count).getQuestion());
-//
-//                            submit.setVisibility(View.INVISIBLE);
-//
-//                            if ((userAns.getText().toString().equals(correctAns.getText().toString()))){
-//                                userAns.setTextColor(Color.parseColor("#40fd1a"));
-//                            }else {
-//                                userAns.setTextColor(Color.parseColor("#f20b3d"));
-//                            }
-                        }
-                    }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-//                            submit.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    builder.show();
-                }
-            }
-        });
-
-//        submit = view.findViewById(R.id.SpSubmit);
-//        JobsListView = view.findViewById(R.id.SpdMRecy);
-//        JobsListView.setAdapter(lviewAdapter);
-//        layoutManager = new LinearLayoutManager(getActivity());
-//
-//        ((LinearLayoutManager) layoutManager).setOrientation(LinearLayout.HORIZONTAL);
-//        JobsListView.setLayoutManager(layoutManager);
 
         back.setVisibility(View.INVISIBLE);
         next.setVisibility(View.INVISIBLE);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startQueAnimation();
+                Animation();
                 if (count > 0) {
-                    Log.e(TAG, "back input" + count + "");
                     count = count - 1;
-                    Log.e(TAG, count + "");
-                    Log.e(TAG, arryJobDetails.get(count).getUserAnswer());
                     question.setText(arryJobDetails.get(count).getQuestion());
-                    answer.setText(arryJobDetails.get(count).getUserAnswer());
-                    Log.e(TAG, "back output" + count + "");
+                    option1.setText(arryJobDetails.get(count).getOption1());
+                    option2.setText(arryJobDetails.get(count).getOption2());
+                    option3.setText(arryJobDetails.get(count).getOption3());
+                    option4.setText(arryJobDetails.get(count).getOption4());
 
-                    seekBar.setProgress(seekBar.getProgress()- 1);
+                    seekBar.setProgress(seekBar.getProgress() - 1);
+
+                    Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+                    if (arryJobDetails.get(count).getUserAnswer() != null && arryJobDetails.get(count).getUserAnswer().length() > 0) {
+                        if (option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option1.setChecked(true);
+                            Log.i(TAG, " *** getQuestionnaire started" + option1.isChecked());
+                        } else if (option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.setBackgroundResource(android.R.drawable.btn_default);
+                            radioGroup.clearCheck();
+                            option2.setChecked(true);
+                        } else if (option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.setBackgroundResource(android.R.drawable.btn_default);
+                            radioGroup.clearCheck();
+                            option3.setChecked(true);
+                        } else if (option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.setBackgroundResource(android.R.drawable.btn_default);
+                            radioGroup.clearCheck();
+                            option4.setChecked(true);
+                        }
+                    }
                 }
                 CountControll();
             }
@@ -289,37 +246,210 @@ public class SpeedMathsFragment extends Fragment implements View.OnClickListener
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                int size = arryJobDetails.size();
+                questionNo.setText(count + 1 + "/" + size);
+
+                startQueAnimation();
+                Animation();
+                Log.i(TAG, " *** getQuestionnaire started" + radioGroup.getCheckedRadioButtonId());
                 if (count > 0 || count == 0) {
-                    Log.e(TAG, "next input" + count + "");
-                    arryJobDetails.get(count).setUserAnswer(answer.getText().toString());
+                    String userAnswer = null;
+                    if (option1.isChecked()) {
+                        userAnswer = option1.getText().toString();
+                    } else if (option2.isChecked()) {
+                        userAnswer = option2.getText().toString();
+                    } else if (option3.isChecked()) {
+                        userAnswer = option3.getText().toString();
+                    } else if (option4.isChecked()) {
+                        userAnswer = option4.getText().toString();
+                    }
+
+                    if (userAnswer != null) {
+                        if (arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                            Score = Score + 1;
+                        } else if (!arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                            Wrong = Wrong + 1;
+                        }
+                    } else {
+                        NotAttempted = NotAttempted + 1;
+                    }
+
+
+                    arryJobDetails.get(count).setUserAnswer(userAnswer);
+                    Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+
                     count = count + 1;
                     question.setText(arryJobDetails.get(count).getQuestion());
-                    answer.setText(arryJobDetails.get(count).getUserAnswer());
-                    Log.e(TAG, "next output" + count + "");
+                    option1.setText(arryJobDetails.get(count).getOption1());
+                    option2.setText(arryJobDetails.get(count).getOption2());
+                    option3.setText(arryJobDetails.get(count).getOption3());
+                    option4.setText(arryJobDetails.get(count).getOption4());
 
-                    seekBar.setProgress(seekBar.getProgress()+ 1);
+                    seekBar.setProgress(seekBar.getProgress() + 1);
+
+                    Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+                    if (arryJobDetails.get(count).getUserAnswer() != null && arryJobDetails.get(count).getUserAnswer().length() > 0) {
+                        if (option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option1.setChecked(true);
+                        } else if (option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option2.setChecked(true);
+                        } else if (option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option3.setChecked(true);
+                        } else if (option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option4.setChecked(true);
+                        }
+                    } else {
+                        startQueAnimation();
+                        Animation();
+                        resetColor();
+                        radioGroup.clearCheck();
+                        option1.setChecked(false);
+                        option2.setChecked(false);
+                        option3.setChecked(false);
+                        option4.setChecked(false);
+                    }
+//                    if (userAnswer.equalsIgnoreCase(arryJobDetails.get(count).getAnswer())){
+//                        Score++;
+//                    }else if (!userAnswer.equalsIgnoreCase(arryJobDetails.get(count).getAnswer())){
+//                        Wrong++;
+//                    }else if (userAnswer.isEmpty()){
+//                        NotAttempt++;
+//                    }
                 }
                 CountControll();
             }
         });
 
-        return view;
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+                builder.setTitle("Are Sure you want to submit");
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String userAnswer = null;
+                        if (option1.isChecked()) {
+                            userAnswer = option1.getText().toString();
+                        } else if (option2.isChecked()) {
+                            userAnswer = option2.getText().toString();
+                        } else if (option3.isChecked()) {
+                            userAnswer = option3.getText().toString();
+                        } else if (option4.isChecked()) {
+                            userAnswer = option4.getText().toString();
+                        }
+
+                        if (userAnswer != null) {
+                            if (arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                                Score = Score + 1;
+                            } else if (!arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                                Wrong = Wrong + 1;
+                            }
+                        } else {
+                            NotAttempted = NotAttempted + 1;
+                        }
+
+//                        arryJobDetails.get(9).setUserAnswer(userAnswer);
+//                        ListView listView = Objects.requireNonNull(getActivity()).findViewById(R.id.listviewSPDM);
+//                        CustomAdapterSPDM customAdapter = new CustomAdapterSPDM(arryJobDetails);
+//                        listView.setAdapter(customAdapter);
+//                        listView.setVisibility(View.VISIBLE);
+
+                        submit.setVisibility(View.INVISIBLE);
+                        Gson gson = new Gson();
+                        Intent intent = new Intent(getActivity(), ResultActivity.class);
+                        Log.d(TAG, "arrayjobdetails" + gson.toJson(arryJobDetails));
+                        intent.putExtra("userArray", gson.toJson(arryJobDetails));
+//                        intent.putExtra("AnswersSPDM",arryJobDetails.get(count).getAnswer());
+//                        intent.putExtra("UserAnsSPDM",userAnswer);
+//                        intent.putExtra("CommentsSPDM",arryJobDetails.get(count).getComment());
+
+                        intent.putExtra("notattempted", NotAttempted);
+                        intent.putExtra("score", Score);
+                        intent.putExtra("wrong", Wrong);
+                        startActivity(intent);
+
+                    }
+                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+//
+                    }
+                });
+                builder.show();
+            }
+
+        });
+
+        return myview;
     }
 
-    class CustomAdapterSPDM extends BaseAdapter{
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (group.getId()) {
+            case R.id.rgroupSpdm:
+                if (option1.isChecked()) {
+                    option1.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                } else if (option2.isChecked()) {
+                    option2.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                } else if (option3.isChecked()) {
+                    option3.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                } else if (option4.isChecked()) {
+                    option4.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                }
+                break;
+        }
+    }
+
+    class CustomAdapterSPDM extends BaseAdapter {
+
+        private ArrayList<Questionnaire> arrayList;
+        private Context context;
+
+        public CustomAdapterSPDM(ArrayList<Questionnaire> arrayList) {
+            this.context = context;
+            this.arrayList = arrayList;
+        }
 
         @Override
         public int getCount() {
             return 10;
         }
+
         @Override
         public Object getItem(int position) {
             return null;
         }
+
         @Override
         public long getItemId(int position) {
             return 0;
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -330,47 +460,20 @@ public class SpeedMathsFragment extends Fragment implements View.OnClickListener
             TextView correctAns = convertView.findViewById(R.id.correctAnswer);
             TextView explanation = convertView.findViewById(R.id.explanation);
 
-            question.setText(arryJobDetails.get(count).getQuestion());
-            userAns.setText(answer.getText().toString());
-            correctAns.setText(arryJobDetails.get(count).getAnswer());
-            explanation.setText(arryJobDetails.get(count).getComment());
+            question.setText(arrayList.get(position).getQuestion());
+            userAns.setText(arrayList.get(position).getUserAnswer());
+            correctAns.setText(arrayList.get(position).getAnswer());
+            explanation.setText(arrayList.get(position).getComment());
 
             if ((userAns.getText().toString().equals(correctAns.getText().toString()))) {
                 userAns.setTextColor(Color.parseColor("#40fd1a"));
             } else {
                 userAns.setTextColor(Color.parseColor("#f20b3d"));
             }
+
             return convertView;
         }
-    }
 
-    class SPDMadapter extends RecyclerView.Adapter<SPDMadapter.MyViewHolder> {
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView question, userAns, correctAns, explanation;
-            public MyViewHolder(View itemView) {
-                super(itemView);
-                question = itemView.findViewById(R.id.question);
-                userAns = itemView.findViewById(R.id.userAnswer);
-                correctAns = itemView.findViewById(R.id.correctAnswer);
-                explanation = itemView.findViewById(R.id.explanation);
-            }
-        }
-        @NonNull
-        @Override
-        public SPDMadapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
-        }
-        @Override
-        public void onBindViewHolder(@NonNull SPDMadapter.MyViewHolder holder, int position) {
-            holder.question.setText(arryJobDetails.get(count).getQuestion());
-            holder.userAns.setText(arryJobDetails.get(count).getUserAnswer());
-            holder.correctAns.setText(arryJobDetails.get(count).getAnswer());
-            holder.explanation.setText(arryJobDetails.get(count).getComment());
-        }
-        @Override
-        public int getItemCount() {
-            return 0;
-        }
     }
 
     public void getQuestionnaire(final int id, final String type) {
@@ -431,14 +534,15 @@ public class SpeedMathsFragment extends Fragment implements View.OnClickListener
                     }
 
                     question.setText(arryJobDetails.get(count).getQuestion());
-//                        lviewAdapter = new CustomSpdMAdapter(getActivity(), arryJobDetails);
-//                        JobsListView.setAdapter(lviewAdapter);
-
-
+                    option1.setText(arryJobDetails.get(count).getOption1());
+                    option2.setText(arryJobDetails.get(count).getOption2());
+                    option3.setText(arryJobDetails.get(count).getOption3());
+                    option4.setText(arryJobDetails.get(count).getOption4());
+                    Animation();
+                    startQueAnimation();
                 }
             } else {
                 Log.i(TAG, " List completed");
-
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -448,102 +552,35 @@ public class SpeedMathsFragment extends Fragment implements View.OnClickListener
     @Override
     public void onPause() {
         super.onPause();
-        variable = 1;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
+    private class ProgressTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
 
-            case R.id.btnOne:
-                answer.setText(answer.getText() + "1");
-                break;
-
-            case R.id.btnTwo:
-                answer.setText(answer.getText() + "2");
-                break;
-
-            case R.id.btnThree:
-                answer.setText(answer.getText() + "3");
-                break;
-
-            case R.id.btnFour:
-                answer.setText(answer.getText() + "4");
-                break;
-
-            case R.id.btnFive:
-                answer.setText(answer.getText() + "5");
-                break;
-
-            case R.id.btnSix:
-                answer.setText(answer.getText() + "6");
-                break;
-
-            case R.id.btnSeven:
-                answer.setText(answer.getText() + "7");
-                break;
-
-            case R.id.btnEight:
-                answer.setText(answer.getText() + "8");
-                break;
-
-            case R.id.btnNine:
-                answer.setText(answer.getText() + "9");
-                break;
-
-            case R.id.btnZero:
-                answer.setText(answer.getText() + "0");
-                break;
-
-            case R.id.btnDot:
-                answer.setText(answer.getText() + ".");
-                break;
-
-            case R.id.btnClear:
-                String str = answer.getText().toString();
-                if (str != null && str.length() > 0) {
-                    str = str.substring(0, str.length() - 1);
-                }
-                answer.setText(str);
-                break;
-
-            case R.id.timerSpdm:
-                starttimer();
-                break;
         }
 
-    }
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            if (netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.isConnected() && netInfo.isAvailable()) {
 
-    public void starttimer() {
-
-        CountDownTimer countDownTimer = new CountDownTimer(timeleft, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timeleft = millisUntilFinished;
-                UpdateTimer();
-            }
-
-            @Override
-            public void onFinish() {
+            } else {
 
             }
-        }.start();
-        TimerRunning = true;
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
 
-//        StartStopButton.setText("PAUSE");
-    }
+        @Override
+        protected void onPostExecute(Void result) {
 
-    public void UpdateTimer() {
-        int minutes = (int) (timeleft / 1000) / 60000;
-        int seconds = (int) (timeleft / 1000) % 60000;
-
-        String timelefttext;
-        timelefttext = "" + minutes;
-        timelefttext += ":";
-        if (seconds < 10) timelefttext += "0";
-        timelefttext += seconds;
-
-        StartTimer.setText(timelefttext);
+        }
     }
 
     public void CountControll() {
@@ -553,13 +590,64 @@ public class SpeedMathsFragment extends Fragment implements View.OnClickListener
         }
         if (count == 9) {
             next.setVisibility(View.INVISIBLE);
-            back.setVisibility(View.VISIBLE);
+            back.setVisibility(View.INVISIBLE);
+            submit.setVisibility(View.VISIBLE);
         }
         if (count > 0) {
-            back.setVisibility(View.VISIBLE);
+            back.setVisibility(View.INVISIBLE);
         }
         if (count <= 8) {
             next.setVisibility(View.VISIBLE);
+            submit.setVisibility(View.INVISIBLE);
         }
     }
+
+    public void resetColor() {
+        option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+        option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+        option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+        option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+    }
+
+    public void Animation() {
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.fall_down);
+        option1.startAnimation(animation);
+        option2.startAnimation(animation);
+        option3.startAnimation(animation);
+        option4.startAnimation(animation);
+    }
+
+    public void startQueAnimation() {
+        queAnim = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
+        question.startAnimation(queAnim);
+    }
+
+    public void startcountdown() {
+        countDownTimer = new CountDownTimer(150000, 1000) {
+            int i = 1000;
+
+            @Override
+            public void onTick(final long millSecondsLeftToFinish) {
+                long seconds = millSecondsLeftToFinish / 6000;
+                i = i - 1;
+//                donutProgress.setProgress(i);
+
+                StartTimer.setText("" + String.format(FORMAT,
+                        TimeUnit.MILLISECONDS.toHours(millSecondsLeftToFinish),
+                        TimeUnit.MILLISECONDS.toMinutes(millSecondsLeftToFinish) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millSecondsLeftToFinish)),
+                        TimeUnit.MILLISECONDS.toSeconds(millSecondsLeftToFinish) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(millSecondsLeftToFinish))));
+            }
+
+            @Override
+            public void onFinish() {
+                StartTimer.setText("Done!");
+//                donutProgress.setProgress(0);
+            }
+        };
+        countDownTimer.start();
+
+    }
+
 }

@@ -4,12 +4,12 @@ public class Constants {
 
     final public static String FCM_ID = "fcm_id";
     final public static String APPLICATION_VERSION_NAME = "application_version_name";
-    final public static String IS_FIRST_RUN = "is_first_run";
-    final public static String USER_EMAIL_ID = "emailid";
-    final public static String USER_NAME = "username";
-    final public static String USER_ID = "userid";
-    final public static String LOGIN_TYPE = "logintype";
-    final public static String LOGIN_TYPE_MOBILE = "mobile";
+    final public static String SPEED_MATHS = "Speed Maths";
+    final public static String GK = "GK";
+    final public static String PUZZLE = "Puzzle";
+    final public static String MOTIVATION = "Motivation";
+    final public static String WORD_POWER = "Wordpower";
+    final public static String TOPICS_OF_THE_WEEK = "Topic";
     final public static String LOGIN_TYPE_FACEBOOK = "facebook";
     final public static String LOGIN_TYPE_GOOGLE = "google";
     final public static String LOGIN_TYPE_LINKEDIN = "linkedin";

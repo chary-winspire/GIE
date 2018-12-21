@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidPushNotification</string>
+    <string name="app_name">WinspireGo</string>
     <string name="action_settings">Settings</string>
 
     <string name="winspire_name">Winspire Magazine</string>
@@ -99,18 +99,34 @@
 
     <string name="Date_Picker">Date Picker</string>
 
-    <string name="Cat_Moti_Title">Daily Kick Start</string>
-    <string name="Cat_Moti_Des">Kick Start your morning everyday and makes the most of each day in your life!</string>
-    <string name="Cat_SPDM_Title">How Smart Are You Toaday ?</string>
-    <string name="Cat_SPDM_Des">Find out how smart you are(and increase your IQ)with our classical IQ test.</string>
-    <string name="Cat_GK_Title">Daily GK Digest</string>
-    <string name="Cat_GK_Des">Enhance your general knowledge everyday with our Daily GK Digest. 5 questions everyday!</string>
-    <string name="Cat_Puzzle_Title">Can You Solve It?</string>
-    <string name="Cat_Puzzle_Des">Come back every day and see if you can solve our Daily puzzles. One puzzle everyday!</string>
-    <string name="Cat_Poll_Title">The poll of the Day</string>
-    <string name="Cat_Poll_Des">Find out what your friends thinks by answering the poll question everyday</string>
-    <string name="Cat_TofW_Title">The topic of the Week</string>
-    <string name="Cat_TofW_Des">Educate students with various concepts every week.</string>
+    <string name="Cat_ToDo_Title">Plan Your Day… Every Day</string>
+    <string name="Cat_ToDo_Des">What Is Your Plan for Today?</string>
+    <string name="Cat_Moti_Title">Daily Kickstart</string>
+    <string name="Cat_Moti_Des">Kickstart your day with the best motivational and inspiring thoughts from great minds.</string>
+    <string name="Cat_SPDM_Title">Speed Math</string>
+    <string name="Cat_SPDM_Des">Test and exercise your brain in 150 seconds with speed math everyday.</string>
+    <string name="Cat_Word_Title">Word Coach</string>
+    <string name="Cat_Word_Des">Build and improve your vocabulary\nwith 5 words everyday .</string>
+    <string name="Cat_Puzzle_Title">Brain Teasers</string>
+    <string name="Cat_Puzzle_Des">Get smarter and improve your competence by solving one puzzle everyday.</string>
+    <string name="Cat_GK_Title">GK Digest</string>
+    <string name="Cat_GK_Des">Improve your overall General Knowledge\nwith 5 questions everyday.</string>
+    <string name="Cat_TofW_Title">Top Picks Of The Week</string>
+    <string name="Cat_TofW_Des">Helps students to prepare for competitive exams, refreshing the concepts and boosts confidence.</string>
 
+    <string name="TitleReminder">Reminder Title</string>
+    <string name="ContentReminder">Reminder Content</string>
+    <string name="DefaultDate">Default Date</string>
+    <string name="DefaultTime">Default Time</string>
 
+    <string name="WPTitle">dapper [ DAP-er ]</string>
+    <string name="WPMeaning">[adjective] \nMEANING: \n1. stylish \n2. neat or smartly dressed \n3. lively or energetic</string>
+    <string name="WPExample">
+        USAGE EXAMPLE 1: \nThe dapper outfit he wore won him the title of promenade king.
+        \nUSAGE EXAMPLE 2: \nThe world number two did not disappoint the crowd as he emerged wearing a dapper new warm up outfit with a gold trimmed jacket and two toned shoes.
+    </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hide_bottom_view_on_scroll_behavior" />
 </resources>

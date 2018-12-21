@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/addreminderlayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_alignParentBottom="true"
+    android:gravity="center">
+
+
+    <EditText
+        android:id="@+id/edittitlereminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Title"
+        android:inputType="text"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/editDesrreminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittitlereminder"
+        android:hint="About / Description"
+        android:inputType="text|textMultiLine|textImeMultiLine" />
+
+    <EditText
+        android:id="@+id/editdatereminder"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editDesrreminder"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:hint="Date"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/edittimereminder"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editDesrreminder"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/editdatereminder"
+        android:layout_toRightOf="@+id/editdatereminder"
+        android:gravity="center"
+        android:hint="Time"
+        android:inputType="time" />
+
+    <Button
+        android:id="@+id/editreminderbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editdatereminder"
+        android:layout_centerInParent="true"
+        android:text="EDIt" />
+
+</RelativeLayout>

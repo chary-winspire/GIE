@@ -8,6 +8,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.bumptech.glide.util.Util;
+import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+
 public class FlahScreen extends AppCompatActivity {
 
     final int SPLASH_DISPLAY_LENGTH = 3000;
@@ -19,7 +23,7 @@ public class FlahScreen extends AppCompatActivity {
         setContentView(R.layout.activity_flah_screen);
 
         final ImageView logo = findViewById(R.id.logo);
-        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_scale_down);
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         logo.startAnimation(animation);
 
 
@@ -30,11 +34,26 @@ public class FlahScreen extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(FlahScreen.this, FirstActivity.class);
-                FlahScreen.this.startActivity(mainIntent);
-                FlahScreen.this.finish();
+//                Intent mainIntent = new Intent(FlahScreen.this, FirstActivity.class);
+//                FlahScreen.this.startActivity(mainIntent);
+//                FlahScreen.this.finish();
+
+                Intent activityIntent;
+
+                // go straight to main if a token is stored
+                AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                if (accessToken != null || isSignedIn()) {
+                    activityIntent = new Intent(FlahScreen.this, MasterActivity.class);
+                } else {
+                    activityIntent = new Intent(FlahScreen.this, LoginRegister.class);
+                }
+                startActivity(activityIntent);
+                finish();
             }
         }, SPLASH_DISPLAY_LENGTH);
+    }
+    private boolean isSignedIn() {
+        return GoogleSignIn.getLastSignedInAccount(this) != null;
     }
 }
 

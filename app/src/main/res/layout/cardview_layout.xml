@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Topiccardview"
+    card_view:cardBackgroundColor="#909af1e9"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="6dp"
+    card_view:contentPadding="0dp"
+    android:layout_margin="6dp"
+    android:layout_height="90dp">
+
+    <RelativeLayout
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        android:padding="0dp"
+        android:layout_gravity="center"
+        android:background="#909af1e9">
+
+        <ImageView
+            android:id="@+id/TopicImage"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/TopicTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/TopicImage"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:layout_margin="6dp"
+            android:textColor="@color/White"
+            android:text="Topic Title"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:text="Topic Description"
+            android:id="@+id/TopicDes"
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:visibility="gone"
+            android:layout_below="@+id/TopicTitle"
+            android:layout_toEndOf="@+id/TopicImage" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

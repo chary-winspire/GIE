@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/addreminderlayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_alignParentBottom="true"
+    android:gravity="center">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/titlereminder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Title"
+                android:inputType="text"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/Desrreminder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titlereminder"
+                android:hint="About / Description"
+                android:inputType="text|textMultiLine|textImeMultiLine" />
+
+            <CheckBox
+                android:id="@+id/Checkbox"
+                android:text="Remind Me"
+                android:layout_centerInParent="true"
+                android:layout_below="@+id/Desrreminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <DatePicker
+                android:id="@+id/datePickerReminder"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_below="@+id/Checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </DatePicker>
+
+            <TimePicker
+                android:id="@+id/timePickerReminder"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_below="@id/datePickerReminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TimePicker>
+
+            <Button
+                android:id="@+id/addreminderbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/timePickerReminder"
+                android:layout_centerInParent="true"
+                android:text="ADD+" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+
+
+</RelativeLayout>

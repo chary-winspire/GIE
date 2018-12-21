@@ -23,7 +23,7 @@ public class recyclerViewHolder extends RecyclerView.ViewHolder implements View.
         super(view);
 
         this. title = (TextView) itemView.findViewById(R.id.questionSpdm);
-        this. client = (TextView) itemView.findViewById(R.id.ansSpdm);
+//        this. client = (TextView) itemView.findViewById(R.id.ansSpdm);
 
       //  this.jobListItem.setOnClickListener(this);
 

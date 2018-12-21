@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="50dp"
     tools:context=".CategoriesFragment">
 
     <ScrollView
+        android:id="@+id/catScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,12 +17,12 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:id="@+id/cateMotivation"
-                android:gravity="bottom"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/cat_motivation">
+                android:layout_height="260dp"
+                android:background="@drawable/cat_motivation"
+                android:gravity="bottom"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -30,9 +31,9 @@
                     android:layout_marginTop="100dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/Cat_Moti_Title"
-                    android:textStyle="bold"
                     android:textColor="@color/White"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="80dp"
@@ -42,9 +43,9 @@
                     android:background="@color/White" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="280dp"
@@ -61,30 +62,162 @@
                         android:layout_marginStart="6dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/round_shape"
-                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+                        android:contentDescription="TODO"
+                        android:src="@drawable/ic_play" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/cateSpdm"
-                android:gravity="bottom"
+                android:id="@+id/cateReminder"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/cat_spdm">
+                android:layout_height="80dp"
+                android:background="#155800"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="7.5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="@string/Cat_ToDo_Des"
+                        android:textColor="@color/White"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="2.5"
+                    android:gravity="center">
+
+                    <ImageButton
+                        android:id="@+id/button"
+                        android:layout_width="70dp"
+                        android:layout_height="40dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/rectangle_shapre_white"
+                        android:gravity="center"
+                        android:paddingTop="6dp"/>
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
+                        android:layout_alignTop="@+id/button"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-10dp"
+                        android:background="@drawable/rectangle_shape"
+                        android:gravity="center"
+                        android:text="New"
+                        android:textColor="@color/White" />
+
+                    <TextView
+                        android:layout_width="64dp"
+                        android:layout_height="24dp"
+                        android:layout_alignStart="@+id/button"
+                        android:layout_alignTop="@+id/button"
+                        android:layout_alignEnd="@+id/button"
+                        android:layout_alignBottom="@+id/button"
+                        android:gravity="center"
+                        android:paddingTop="6dp"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:text="Add Task"
+                        android:textColor="@color/White" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cateSpdm"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/cat_spdm"
+                android:gravity="bottom"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
-                    android:textStyle="bold"
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/Cat_SPDM_Title"
+                    android:textColor="@color/Black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/LiteBlack" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/Cat_SPDM_Des"
+                        android:textColor="@color/LiteBlack"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/round_shape"
+                        android:contentDescription="TODO"
+                        android:src="@drawable/ic_play" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cateWord"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/cat_wordpower"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/Cat_Word_Title"
                     android:textColor="@color/White"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="80dp"
@@ -94,70 +227,16 @@
                     android:background="@color/LiteWhite" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="280dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/Cat_SPDM_Des"
-                        android:textColor="@color/LiteWhite"
-                        android:textSize="14sp" />
-
-                    <ImageButton
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:layout_marginStart="6dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/round_shape"
-                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
-
-                </LinearLayout>
-
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/cateGk"
-                android:gravity="bottom"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/cat_gk">
-
-                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/Cat_GK_Title"
-                    android:textColor="@color/White"
-                    android:textSize="24sp" />
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="2dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/LiteGreen" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="280dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="14dp"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/Cat_GK_Des"
+                        android:text="@string/Cat_Word_Des"
                         android:textColor="@color/LiteWhite"
                         android:textSize="14sp" />
 
@@ -167,32 +246,32 @@
                         android:layout_marginStart="6dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/round_shape"
-                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+                        android:contentDescription="TODO"
+                        android:src="@drawable/ic_play" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
                 android:id="@+id/catePuzzle"
-                android:gravity="bottom"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/cat_puzzle">
+                android:layout_height="220dp"
+                android:background="@drawable/cat_puzzle_"
+                android:gravity="bottom"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
-                    android:textStyle="bold"
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/Cat_Puzzle_Title"
                     android:textColor="@color/White"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="80dp"
@@ -202,9 +281,9 @@
                     android:background="@color/LiteGreen" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="280dp"
@@ -221,32 +300,32 @@
                         android:layout_marginStart="6dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/round_shape"
-                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+                        android:contentDescription="TODO"
+                        android:src="@drawable/ic_play" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/catePoll"
-                android:gravity="bottom"
+                android:id="@+id/cateGk"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/cat_poll">
+                android:layout_height="220dp"
+                android:background="@drawable/cat_gk"
+                android:gravity="bottom"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
-                    android:textStyle="bold"
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/Cat_Poll_Title"
+                    android:text="@string/Cat_GK_Title"
                     android:textColor="@color/White"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="80dp"
@@ -256,16 +335,16 @@
                     android:background="@color/LiteGreen" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="280dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="14dp"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/Cat_Poll_Des"
+                        android:text="@string/Cat_GK_Des"
                         android:textColor="@color/LiteWhite"
                         android:textSize="14sp" />
 
@@ -275,42 +354,44 @@
                         android:layout_marginStart="6dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/round_shape"
-                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+                        android:contentDescription="TODO"
+                        android:src="@drawable/ic_play" />
 
                 </LinearLayout>
+
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
                 android:id="@+id/cateTofw"
-                android:gravity="bottom"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/cat_tofw">
+                android:layout_height="220dp"
+                android:background="#fb094a9b"
+                android:gravity="bottom"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="40dp"
-                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/Cat_TofW_Title"
                     android:textColor="@color/White"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="80dp"
                     android:layout_height="2dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/LiteGreen" />
+                    android:background="@color/White" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="280dp"
@@ -324,53 +405,13 @@
                     <ImageButton
                         android:layout_width="42dp"
                         android:layout_height="42dp"
+                        android:layout_gravity=""
                         android:layout_marginStart="6dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/round_shape"
-                        android:contentDescription="TODO" android:src="@drawable/ic_play" />
+                        android:contentDescription="TODO"
+                        android:src="@drawable/ic_play" />
 
-                </LinearLayout>
-
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/cateReminder"
-                android:gravity="bottom"
-                android:layout_width="match_parent"
-                android:layout_height="120dp">
-
-                <ImageView
-                    android:src="@drawable/alarmclock"
-                    android:layout_width="120dp"
-                    android:layout_height="match_parent" />
-
-                <LinearLayout
-                    android:weightSum="3"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:text="REMINDER"
-                        android:textSize="24sp"
-                        android:textColor="@color/Black"
-                        android:gravity="center"
-                        android:layout_weight="2"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp" />
-
-                    <TextView
-                        android:layout_weight="1"
-                        android:textSize="18sp"
-                        android:gravity="center"
-                        android:text="Reminder Motivation Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -378,6 +419,5 @@
         </LinearLayout>
 
     </ScrollView>
-
 
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.example.extarc.androidpushnotification.Models;
 public class Questionnaire {
     private int id;
     private String type;
+    private String date;
 
 
     private String question;
@@ -20,6 +21,15 @@ public class Questionnaire {
     private String answer;
 
     private String comment;
+
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getComment() {
         return comment;

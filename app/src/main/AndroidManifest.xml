@@ -11,6 +11,7 @@
 
     <!-- This permission is optional but recommended so we can be smart about when to send data. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- This permission is optional but recommended so events will contain information about bluetooth state -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -19,7 +20,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/CustomTheme">
@@ -74,7 +75,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".BookmarkActivity" />
-        <activity android:name=".ResultActivity"></activity>
+        <activity android:name=".ResultActivity" />
+        <activity android:name=".aboutactivity" />
+        <activity android:name=".ReminderActivity"
+            android:theme="@style/AppTheme"/>
+
+        <receiver
+            android:name=".ReminderNotification"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
     </application>
 
 </manifest>

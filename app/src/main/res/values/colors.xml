@@ -8,8 +8,11 @@
     <color name="colorNavText">#01294b</color>
 
     <color name="ColorRed">#f20b3d</color>
-    <color name="GoldenYellow">#fdfd41</color>
+    <color name="GoldenYellow">#FFDF00</color>
     <color name="KFCRed">#a3080c</color>
+    <color name="flipkartYellow">#F8E831</color>
+    <color name="QuoraRed">#AA2200</color>
+    <color name="DarkYello">#c9b502</color>
     <color name="LightDarkWhite">#e9e7e7</color>
 
     <color name="ColorWhite">#FFFFFF</color>
@@ -31,14 +34,24 @@
     <color name="LitePink">#de419e</color>
     <color name="LiteBlue">#92fffc</color>
 
-
     <color name="Header">#181818</color>
     <color name="PageBackground">#e3e3e3</color>
 
-    <color name="LiteRedBTN">#FFF15458</color>
+    <color name="LiteRedBTN">#f45637</color>
 
     <color name="bottom_bar_selector">#f45637</color>
     <color name="colorGray">#ccc</color>
+
+    <color name="myGreen">#3A5F0B</color>
+    <color name="myGreenlite">#FF00FF00</color>
+
+
+    <color name="SPDM_Toolbar">#FFC20D</color>
+    <color name="SPDM_normal">#f4ecc6</color>
+    <color name="Topic_Toolbar">#fb094a9b</color>
+    <color name="Puzzle_Toolbar">#2F8B43</color>
+    <color name="GK_Toolbar">#F05128</color>
+    <color name="GK_normal">#edbfb3</color>
 
 
 </resources>

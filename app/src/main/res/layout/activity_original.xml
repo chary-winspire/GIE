@@ -15,20 +15,22 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_margin="6dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:background="@android:color/transparent">
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_two_white"
+                android:background="@color/colorGray"
+                android:gravity="center"
                 android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                 app:layout_scrollFlags="scroll|enterAlways"
-                android:gravity="top"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ToolbarColoredBackArrow"
+                app:title="Winspire Go"
+                app:titleTextColor="@color/White">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -36,27 +38,39 @@
 
                     <TextView
                         android:id="@+id/ToolbarTitle"
-                        android:text="Magazine"
-                        android:textStyle="bold"
-                        android:textSize="24sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
                         android:gravity="center"
+                        android:text="Winspire Go"
                         android:textColor="@color/Black"
-                        android:layout_width="120dp"
-                        android:layout_height="44dp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ToolbarTitle2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:gravity="center"
+                        android:layout_centerInParent="true"
+                        android:text="Fragment Title"
+                        android:textColor="@color/Black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
 
                     <Button
                         android:id="@+id/datePicker2"
                         android:layout_width="120dp"
                         android:layout_height="44dp"
                         android:alpha="0.7"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:drawableRight="@drawable/ic_arrow_dropdown"
                         android:background="@drawable/datepicker_without_outline"
+                        android:drawableRight="@drawable/ic_arrow_dropdown"
+                        android:gravity="center"
                         android:onClick="showDatePickerDialog"
                         android:text="@string/Date_Picker"
                         android:textColor="@color/Black"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
@@ -74,9 +88,10 @@
             android:layout_gravity="bottom"
             android:background="@drawable/shape_two_white"
             android:foreground="?attr/selectableItemBackground"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             app:itemIconTint="@color/Black"
-            app:itemTextColor="@color/Black"
-            app:menu="@menu/bottombar_items" />
+            app:itemTextColor="@color/Black" />
+        <!--app:menu="@menu/bottombar_items"-->
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -120,7 +135,8 @@
                 android:onClick="showDatePickerDialog"
                 android:text="@string/Date_Picker"
                 android:textColor="@color/White"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/shareMoti"
@@ -138,16 +154,99 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigationbar"
-        android:layout_width="match_parent"
+        android:layout_width="260dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/LiteWhite"
         android:fitsSystemWindows="true"
+        android:nestedScrollingEnabled="false"
         app:headerLayout="@layout/navigation_header"
+        app:itemBackground="@drawable/divider"
         app:itemIconTint="@color/GooglePlusRed"
         app:itemTextColor="@color/TwitterBlue"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:menu="@menu/navigation_items" />
+        app:menu="@menu/navigation_items">
+
+        <RelativeLayout
+            android:layout_width="260dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:id="@+id/FBlogout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/shape_two"
+                android:gravity="center"
+                android:text="FB-Logout"
+                android:textColor="@color/White"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/Glogout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/shape_two"
+                android:gravity="center"
+                android:text="G-Logout"
+                android:textColor="@color/White"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/signin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/shape_two"
+                android:gravity="center"
+                android:text="Sign In"
+                android:textColor="@color/White"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+    </android.support.design.widget.NavigationView>
+
+
+    <!--<android.support.design.widget.NavigationView-->
+    <!--android:id="@+id/navigationbar"-->
+    <!--android:visibility="gone"-->
+    <!--android:layout_width="260dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="start"-->
+    <!--android:background="@color/LiteWhite"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--app:headerLayout="@layout/navigation_header"-->
+    <!--app:itemIconTint="@color/GooglePlusRed"-->
+    <!--app:itemTextColor="@color/TwitterBlue"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--app:menu="@menu/navigation_items"-->
+    <!--app:itemBackground="@drawable/divider">-->
+
+    <!--<LinearLayout-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_width="260dp"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--android:layout_height="70dp">-->
+
+    <!--<Button-->
+    <!--android:text="Logout"-->
+    <!--android:textColor="@color/White"-->
+    <!--android:layout_width="130dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="bottom"/>-->
+    <!--<Button-->
+    <!--android:text="Home"-->
+    <!--android:textColor="@color/White"-->
+    <!--android:layout_width="130dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="bottom"/>-->
+
+    <!--</LinearLayout>-->
+
+    <!--</android.support.design.widget.NavigationView>-->
 
 
 </android.support.v4.widget.DrawerLayout>

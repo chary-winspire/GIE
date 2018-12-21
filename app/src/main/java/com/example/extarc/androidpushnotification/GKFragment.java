@@ -7,28 +7,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.extarc.androidpushnotification.Models.Questionnaire;
 import com.google.gson.Gson;
 
@@ -36,30 +36,37 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import static com.example.extarc.androidpushnotification.MasterActivity.bottomNavigation;
+import static com.example.extarc.androidpushnotification.MasterActivity.drawerLayout;
+import static com.example.extarc.androidpushnotification.MasterActivity.fab;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbar;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle2;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GKFragment extends Fragment {
-
-    List<Questionnaire> quesList;
+public class GKFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     private final String TAG = "GKFragment";
     private String questionnaireListStr = null;
 
     TextView question;
+    RelativeLayout quePanel;
     RadioButton option1, option2, option3, option4;
     LinearLayout ansLayoutGK;
-    RelativeLayout mainGKlayout;
-    Button next, previous, submit;
+    RelativeLayout mainGKlayout, startGKlayout;
+    Button next, previous, submit, start;
     int count = 0;
-
-    int score = 0;
-    int queid = 0;
+    int ID=1;
     RadioGroup radioGroup;
+    Animation ansAnim, queAnim;
+    public SharedPreferences preferences;
+    int Score = 0;
+    int Wrong = 0;
+    int NotAttempted = 0;
 
     public GKFragment() {
 
@@ -74,73 +81,231 @@ public class GKFragment extends Fragment {
         // Inflate the layout for this fragment
         final View myview = inflater.inflate(R.layout.gk_view, container, false);
 
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.setMargins(0, 0, 0 , 0);
+        preferences = getActivity().getSharedPreferences(Constants.SP_PERSISTENT_VALUES,
+                Context.MODE_PRIVATE);
+        ID= Integer.valueOf(preferences.getString(Constants.GK,"1"));
+        toolbar.setLayoutParams(layoutParams);
+//        toolbar.setTitle("General Knowledge");
+        toolbar.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.Black));
+        }
+//        bottomNavigation.setVisibility(View.GONE);
+//        fab.setVisibility(View.VISIBLE);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
+
         question = myview.findViewById(R.id.questionGk);
         option1 = myview.findViewById(R.id.gkOp1);
         option2 = myview.findViewById(R.id.gkOp2);
         option3 = myview.findViewById(R.id.gkOp3);
         option4 = myview.findViewById(R.id.gkOp4);
         ansLayoutGK = myview.findViewById(R.id.ansLayoutGK);
+        quePanel = myview.findViewById(R.id.questionGkpanel);
 
         radioGroup = myview.findViewById(R.id.rgroupGk);
-
+        radioGroup.setOnCheckedChangeListener(this);
         mainGKlayout = myview.findViewById(R.id.mainGKlayout);
+        startGKlayout = myview.findViewById(R.id.layoutBtnStartGK);
 
         next = myview.findViewById(R.id.nextGk);
         previous = myview.findViewById(R.id.previousGk);
         submit = myview.findViewById(R.id.submitGk);
+        start = myview.findViewById(R.id.startGK);
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        toolbartitle.setVisibility(View.INVISIBLE);
+        toolbartitle2.setVisibility(View.VISIBLE);
+        toolbartitle2.setText("GK Digest");
+        toolbartitle2.setTextColor(getResources().getColor(R.color.White));
+        toolbar.setNavigationIcon(null);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        fab.setVisibility(View.GONE);
+        startGKlayout.setVisibility(View.INVISIBLE);
+        mainGKlayout.setVisibility(View.VISIBLE);
+        getQuestionnaire(ID, "GK");
+        startAnimation();
+        startQueAnimation();
+
+        previous.setVisibility(View.INVISIBLE);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startQueAnimation();
+                startAnimation();
+                if (count > 0) {
+                    count = count - 1;
+                    question.setText(arryJobDetails.get(count).getQuestion());
+                    option1.setText(arryJobDetails.get(count).getOption1());
+                    option2.setText(arryJobDetails.get(count).getOption2());
+                    option3.setText(arryJobDetails.get(count).getOption3());
+                    option4.setText(arryJobDetails.get(count).getOption4());
+                    Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+                    if (arryJobDetails.get(count).getUserAnswer() != null && arryJobDetails.get(count).getUserAnswer().length() > 0) {
+                        if (option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option1.setChecked(true);
+
+                            Log.i(TAG, " *** getQuestionnaire started" + option1.isChecked());
+                        } else if (option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option2.setChecked(true);
+                        } else if (option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option3.setChecked(true);
+                        } else if (option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option4.setChecked(true);
+                        }
+
+                    }
+                }
+                CountControll();
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startQueAnimation();
+                startAnimation();
+                Log.i(TAG, " *** getQuestionnaire started" + radioGroup.getCheckedRadioButtonId());
+                if (count > 0 || count == 0) {
+                    String userAnswer = null;
+                    if (option1.isChecked()) {
+                        userAnswer = option1.getText().toString();
+                    } else if (option2.isChecked()) {
+                        userAnswer = option2.getText().toString();
+                    } else if (option3.isChecked()) {
+                        userAnswer = option3.getText().toString();
+                    } else if (option4.isChecked()) {
+                        userAnswer = option4.getText().toString();
+                    }
+
+                    if (userAnswer != null) {
+                        if (arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                            Score = Score + 1;
+                        } else if (!arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                            Wrong = Wrong + 1;
+                        }
+                    } else {
+                        NotAttempted = NotAttempted + 1;
+                    }
+
+                    arryJobDetails.get(count).setUserAnswer(userAnswer);
+                    Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+
+                    count = count + 1;
+                    question.setText(arryJobDetails.get(count).getQuestion());
+                    option1.setText(arryJobDetails.get(count).getOption1());
+                    option2.setText(arryJobDetails.get(count).getOption2());
+                    option3.setText(arryJobDetails.get(count).getOption3());
+                    option4.setText(arryJobDetails.get(count).getOption4());
+
+                    Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
+                    if (arryJobDetails.get(count).getUserAnswer() != null && arryJobDetails.get(count).getUserAnswer().length() > 0) {
+                        if (option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option1.setChecked(true);
+                        } else if (option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option2.setChecked(true);
+                        } else if (option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option3.setChecked(true);
+                        } else if (option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
+                            resetColor();
+                            radioGroup.clearCheck();
+                            option4.setChecked(true);
+                        }
+                    } else {
+                        startAnimation();
+                        startQueAnimation();
+                        resetColor();
+                        radioGroup.clearCheck();
+                        option1.setChecked(false);
+                        option2.setChecked(false);
+                        option3.setChecked(false);
+                        option4.setChecked(false);
+                    }
+                }
+                CountControll();
+            }
 
 
-//        int selectedId = rgroupGK.getCheckedRadioButtonId();
-//        radioButton = view.findViewById(selectedId);
+//                    int selectedId = Answer.getCheckedRadioButtonId();
+//                    radioButton = view.findViewById(selectedId);
+//                    Toast.makeText(getActivity(), radioButton.getText(), Toast.LENGTH_SHORT).show();
+//
+        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Are Sure you want to submit");
-//                    builder.setMessage("Your selected answer is: " + radioButton.getText().toString());
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-////                            Toast.makeText(getContext(), radioButton.getText().toString()+" is selected", Toast.LENGTH_SHORT).show();
-//                            for (int i = 0; i < rgroupGK.getChildCount(); i++) {
-//                                rgroupGK.getChildAt(i).setEnabled(false);
-//                            }
-                        String userAnswer=null;
-                        if(option1.isChecked()){
-                            userAnswer= option1.getText().toString();
-                        } else if(option2.isChecked()){
-                            userAnswer= option2.getText().toString();
-                        }else if(option3.isChecked()){
-                            userAnswer= option3.getText().toString();
-                        }else if(option4.isChecked()){
-                            userAnswer= option4.getText().toString();
+
+                        String userAnswer = null;
+                        if (option1.isChecked()) {
+                            userAnswer = option1.getText().toString();
+                        } else if (option2.isChecked()) {
+                            userAnswer = option2.getText().toString();
+                        } else if (option3.isChecked()) {
+                            userAnswer = option3.getText().toString();
+                        } else if (option4.isChecked()) {
+                            userAnswer = option4.getText().toString();
                         }
 
-                        arryJobDetails.get(4).setUserAnswer(userAnswer);
-                        ListView listView = Objects.requireNonNull(getActivity()).findViewById(R.id.listviewGK);
-                        CustomAdapterGK customAdapter = new CustomAdapterGK(arryJobDetails);
-                        listView.setAdapter(customAdapter);
-                        listView.setVisibility(View.VISIBLE);
+                        if (userAnswer != null) {
+                            if (arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                                Score = Score + 1;
+                            } else if (!arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                                Wrong = Wrong + 1;
+                            }
+                        } else {
+                            NotAttempted = NotAttempted + 1;
+                        }
+
+//                        arryJobDetails.get(4).setUserAnswer(userAnswer);
+//                        ListView listView = Objects.requireNonNull(getActivity()).findViewById(R.id.listviewGK);
+//                        CustomAdapterGK customAdapter = new CustomAdapterGK(arryJobDetails);
+//                        listView.setAdapter(customAdapter);
+//                        listView.setVisibility(View.VISIBLE);
 
                         mainGKlayout.setVisibility(View.INVISIBLE);
-
-//                            TextView userAns, correctAns;
-//                            userAns = view.findViewById(R.id.userAnsGK);
-//                            correctAns = view.findViewById(R.id.correctAnsGK);
-//
-//                            userAns.setText(radioButton.getText().toString());
-//                            correctAns.setText(arryJobDetails.get(count).getAnswer());
 
                         submit.setVisibility(View.INVISIBLE);
                         ansLayoutGK.setVisibility(View.VISIBLE);
 
-//                            if ((userAns.getText().toString().equals(correctAns.getText().toString()))){
-//                                userAns.setTextColor(Color.parseColor("#40fd1a"));
-//                            }else {
-//                                userAns.setTextColor(Color.parseColor("#f20b3d"));
-//                            }
+                        Gson gson = new Gson();
+                        Intent intent = new Intent(getActivity(), ResultActivity.class);
+                        Log.d(TAG, "arrayjobdetails" +  gson.toJson(arryJobDetails));
+                        intent.putExtra("userArray",  gson.toJson(arryJobDetails));
+                        intent.putExtra("notattempted", NotAttempted);
+                        intent.putExtra("score", Score);
+                        intent.putExtra("wrong", Wrong);
+                        startActivity(intent);
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -152,125 +317,38 @@ public class GKFragment extends Fragment {
                 });
                 builder.show();
             }
-
-
         });
-
-        previous.setVisibility(View.INVISIBLE);
-        previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                if (count > 0) {
-                if (count > 0) {
-
-
-                    count = count - 1;
-                    question.setText(arryJobDetails.get(count).getQuestion());
-                    option1.setText(arryJobDetails.get(count).getOption1());
-                    option2.setText(arryJobDetails.get(count).getOption2());
-                    option3.setText(arryJobDetails.get(count).getOption3());
-                    option4.setText(arryJobDetails.get(count).getOption4());
-                    Log.i(TAG, " *** getQuestionnaire started"+arryJobDetails.get(count).getUserAnswer());
-                    if(arryJobDetails.get(count).getUserAnswer()!=null && arryJobDetails.get(count).getUserAnswer().length()>0 ){
-                        if(option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                            Log.i(TAG, " *** getQuestionnaire started"+arryJobDetails.get(count).getUserAnswer());
-                            radioGroup.clearCheck();
-                            option1.setChecked(true);
-
-                            Log.i(TAG, " *** getQuestionnaire started"+   option1.isChecked());
-                        } else if(option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                            radioGroup.clearCheck();
-                            option2.setChecked(true);
-                        }else if(option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                            radioGroup.clearCheck();
-                            option3.setChecked(true);
-                        }else if(option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                            radioGroup.clearCheck();
-                            option4.setChecked(true);
-                        }
-
-                    }
-                }
-                CountControll();
-
-            }
-        });
-
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, " *** getQuestionnaire started"+radioGroup.getCheckedRadioButtonId());
-//                if (count > 0 || count == 0) {
-                if (count > 0 || count == 0) {
-                    String userAnswer=null;
-                    if(option1.isChecked()){
-                        userAnswer= option1.getText().toString();
-                    } else if(option2.isChecked()){
-                        userAnswer= option2.getText().toString();
-                    }else if(option3.isChecked()){
-                        userAnswer= option3.getText().toString();
-                    }else if(option4.isChecked()){
-                        userAnswer= option4.getText().toString();
-                    }
-
-                    arryJobDetails.get(count).setUserAnswer(userAnswer);
-                    Log.i(TAG, " *** getQuestionnaire started"+  arryJobDetails.get(count).getUserAnswer());
-                    count = count + 1;
-                    question.setText(arryJobDetails.get(count).getQuestion());
-                    option1.setText(arryJobDetails.get(count).getOption1());
-                    option2.setText(arryJobDetails.get(count).getOption2());
-                    option3.setText(arryJobDetails.get(count).getOption3());
-                    option4.setText(arryJobDetails.get(count).getOption4());
-
-                    Log.i(TAG, " *** getQuestionnaire started"+  arryJobDetails.get(count).getUserAnswer());
-                    if(arryJobDetails.get(count).getUserAnswer()!=null && arryJobDetails.get(count).getUserAnswer().length()>0 ){
-                       if(option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                           radioGroup.clearCheck();
-                           option1.setChecked(true);
-                       } else if(option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                           radioGroup.clearCheck();
-                           option2.setChecked(true);
-                       }else if(option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                           radioGroup.clearCheck();
-                           option3.setChecked(true);
-                       }else if(option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())){
-                           radioGroup.clearCheck();
-                           option4.setChecked(true);
-                       }
-
-                    }else{
-                        radioGroup.clearCheck();
-                        option1.setChecked(false);
-                        option2.setChecked(false);option3.setChecked(false);option4.setChecked(false);
-
-                    }
-
-//                    int selectedId = Answer.getCheckedRadioButtonId();
-//                    radioButton = view.findViewById(selectedId);
-//                    Toast.makeText(getActivity(), radioButton.getText(), Toast.LENGTH_SHORT).show();
-                }
-
-//
-//
-//                count = count + 1;
-//
-//                setQuestionView();
-                CountControll();
-
-
-
-
-            }
-
-
-//                    int selectedId = Answer.getCheckedRadioButtonId();
-//                    radioButton = view.findViewById(selectedId);
-//                    Toast.makeText(getActivity(), radioButton.getText(), Toast.LENGTH_SHORT).show();
-//
-        });
-        getQuestionnaire(1, "GK");
         return myview;
 
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (group.getId()) {
+            case R.id.rgroupGk:
+                if (option1.isChecked()) {
+                    option1.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option2.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option3.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option4.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                } else if (option2.isChecked()) {
+                    option2.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option1.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option3.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option4.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                } else if (option3.isChecked()) {
+                    option3.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option2.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option1.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option4.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                } else if (option4.isChecked()) {
+                    option4.setBackgroundColor(getResources().getColor(R.color.myGreen));
+                    option2.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option3.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                    option1.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+                }
+                break;
+        }
     }
 
     class CustomAdapterGK extends BaseAdapter {
@@ -322,7 +400,6 @@ public class GKFragment extends Fragment {
         }
     }
 
-
     public void getQuestionnaire(final int id, final String type) {
         Log.i("getQuestionnaire", " *** getQuestionnaire started");
         new AsyncTask<Void, Void, String>() {
@@ -347,7 +424,7 @@ public class GKFragment extends Fragment {
                     String jsonAllJobs = "";
                     JSONObject jsonString = new JSONObject(msg);
                     jsonAllJobs = jsonString.getString("questionnaireStr");
-                    Log.e(TAG, jsonAllJobs);
+                    Log.e(TAG, "jsonalljobs" + jsonAllJobs);
                     BindJobsList(jsonAllJobs);
 
                 } catch (Exception e) {
@@ -380,6 +457,8 @@ public class GKFragment extends Fragment {
                         arryJobDetails.add(objJobDetails);
                     }
                     setQuestionView();
+                    startAnimation();
+                    startQueAnimation();
 
 //                       lviewAdapter = new CustomSpdMAdapter(getActivity(), arryJobDetails);
 //                        JobsListView.setAdapter(lviewAdapter);
@@ -402,13 +481,15 @@ public class GKFragment extends Fragment {
         }
         if (count == 4) {
             next.setVisibility(View.INVISIBLE);
-            previous.setVisibility(View.VISIBLE);
+            previous.setVisibility(View.INVISIBLE);
+            submit.setVisibility(View.VISIBLE);
         }
         if (count > 0) {
-            previous.setVisibility(View.VISIBLE);
+            previous.setVisibility(View.INVISIBLE);
         }
         if (count <= 3) {
             next.setVisibility(View.VISIBLE);
+            submit.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -418,6 +499,25 @@ public class GKFragment extends Fragment {
         option2.setText(arryJobDetails.get(count).getOption2());
         option3.setText(arryJobDetails.get(count).getOption3());
         option4.setText(arryJobDetails.get(count).getOption4());
-        queid++;
+    }
+
+    public void resetColor() {
+        option1.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+        option2.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+        option3.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+        option4.setBackgroundColor(getResources().getColor(R.color.GK_Toolbar));
+    }
+    public void startAnimation(){
+        ansAnim = AnimationUtils.loadAnimation(getContext(), R.anim.fall_down);
+        queAnim = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
+        option1.startAnimation(ansAnim);
+        option2.startAnimation(ansAnim);
+        option3.startAnimation(ansAnim);
+        option4.startAnimation(ansAnim);
+        question.startAnimation(queAnim);
+    }
+    public void startQueAnimation(){
+        queAnim = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
+        question.startAnimation(queAnim);
     }
 }

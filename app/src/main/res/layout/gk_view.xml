@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="10dp"
+    android:layout_marginTop="50dp"
+    android:layout_marginBottom="50dp"
     android:gravity="center"
     android:layout_height="match_parent"
     tools:context=".GKFragment">
@@ -13,56 +14,103 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/questionGk"
-            android:layout_marginTop="60dp"
+        <RelativeLayout
+            android:id="@+id/questionGkpanel"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center"
-            android:text="General Knowledge Question"
-            android:textColor="@color/LiteGreen"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:background="#edbfb3"
+            android:layout_marginTop="10dp"
+            android:layout_height="200dp">
+
+            <TextView
+                android:id="@+id/questionGk"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="6dp"
+                android:gravity="center"
+                android:text="General Knowledge Question"
+                android:textColor="@color/Black"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/questionGkpanel"
+            android:background="?android:attr/listDivider" />
 
         <RadioGroup
             android:id="@+id/rgroupGk"
             android:layout_width="match_parent"
-            android:layout_height="184dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/questionGk">
+            android:layout_below="@+id/divider">
 
             <RadioButton
                 android:id="@+id/gkOp1"
-                android:layout_width="match_parent"
+                android:button="@null"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:background="@drawable/btn_gk"
+                android:layout_width="240dp"
+                android:layout_gravity="center"
                 android:layout_height="46dp"
                 android:text="Option One"
-                android:textColor="@color/TwitterBlue"
+                android:textColor="@color/White"
                 android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/gkOp2"
-                android:layout_width="match_parent"
+                android:button="@null"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:background="@drawable/btn_gk"
+                android:layout_width="240dp"
+                android:layout_gravity="center"
                 android:layout_height="46dp"
                 android:text="Option Two"
-                android:textColor="@color/TwitterBlue"
+                android:textColor="@color/White"
                 android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/gkOp3"
-                android:layout_width="match_parent"
+                android:button="@null"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:background="@drawable/btn_gk"
+                android:layout_width="240dp"
+                android:layout_gravity="center"
                 android:layout_height="46dp"
                 android:text="Option Three"
-                android:textColor="@color/TwitterBlue"
+                android:textColor="@color/White"
                 android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/gkOp4"
-                android:layout_width="match_parent"
+                android:button="@null"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:background="@drawable/btn_gk"
+                android:layout_width="240dp"
+                android:layout_gravity="center"
                 android:layout_height="46dp"
                 android:text="Option Four"
-                android:textColor="@color/TwitterBlue"
+                android:textColor="@color/White"
                 android:textSize="20sp" />
 
         </RadioGroup>
@@ -73,7 +121,7 @@
             android:weightSum="2"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_below="@id/questionGk"
+            android:layout_below="@id/questionGkpanel"
             android:layout_height="184dp">
 
             <LinearLayout
@@ -137,33 +185,51 @@
             android:text="Submit"
             android:id="@+id/submitGk"
             android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="52dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="77dp" />
+            android:visibility="gone"
+            android:layout_below="@+id/rgroupGk"
+            android:layout_centerInParent="true"
+            android:layout_height="50dp" />
 
         <Button
-            android:textColor="@color/White"
-            android:text="Next"
             android:id="@+id/nextGk"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="52dp"
+            android:background="@drawable/ic_right_arrow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/rgroupGk"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="77dp" />
+            android:layout_marginEnd="60dp" />
 
         <Button
-            android:textColor="@color/White"
             android:id="@+id/previousGk"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="194dp"
-            android:layout_marginBottom="52dp"
-            android:text="Back" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:layout_below="@+id/rgroupGk"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="60dp"
+            android:background="@drawable/ic_back_arrow" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutBtnStartGK"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/startGK"
+            android:layout_width="144dp"
+            android:layout_height="144dp"
+            android:background="@drawable/round_button"
+            android:gravity="center"
+            android:text="Start"
+            android:textColor="@color/White"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

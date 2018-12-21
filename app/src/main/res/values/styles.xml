@@ -18,15 +18,19 @@
 
     </style>
 
+    <style name="ToolbarColoredBackArrow" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/Black</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
-
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="CustomToolbar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:background">#ffffff</item>
     </style>
+
     <style name="CustomPopup" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:background">#FFF</item>
         <item name="overlapAnchor">false</item>
@@ -34,13 +38,14 @@
     </style>
 
     <style name="dividerBase">
-        <item name="android:background">?android:attr/listDivider</item> //you can give your color here. that will change all divider color in your app.
+        <item name="android:background">?android:attr/listDivider</item>
+        //you can give your color here. that will change all divider color in your app.
     </style>
 
     <style name="dividerHorizontal" parent="dividerBase">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dp</item> // You can change thickness here.
-
+        <item name="android:layout_height">2dp</item>
+        // You can change thickness here.
     </style>
 
     <style name="dividerVertical" parent="dividerBase">
@@ -48,4 +53,4 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-  </resources>
+</resources>

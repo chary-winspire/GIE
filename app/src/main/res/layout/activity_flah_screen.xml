@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:src="@drawable/winspire_logo"
+        android:src="@drawable/winspire_go_logo"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center" />
