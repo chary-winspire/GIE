@@ -102,7 +102,7 @@ public class MotivationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_motivation, container, false);
 
         ivMotiLayout = view.findViewById(R.id.ivMotivationLayout);
-        ivMotiLayout.setVisibility(View.GONE);
+        //ivMotiLayout.setVisibility(View.GONE);
 
         shareit = view.findViewById(R.id.shareMoti);
         shareit.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +159,7 @@ public class MotivationFragment extends Fragment {
 
         motiimage = view.findViewById(R.id.ivMotivation);
         /* fill the background ImageView with the resized image */
-//        motiimage.setImageBitmap(bmp);
+//       motiimage.setImageBitmap(bmp);
         preferences = getActivity().getSharedPreferences(Constants.SP_PERSISTENT_VALUES,
                 Context.MODE_PRIVATE);
         ID = Integer.valueOf(preferences.getString(Constants.MOTIVATION, "0"));
