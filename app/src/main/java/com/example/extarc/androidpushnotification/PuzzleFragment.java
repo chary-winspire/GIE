@@ -5,24 +5,24 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,16 +48,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static com.example.extarc.androidpushnotification.MasterActivity.appBarLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.bottomNavigation;
+import static com.example.extarc.androidpushnotification.MasterActivity.directory;
+import static com.example.extarc.androidpushnotification.MasterActivity.directory_Moti;
 import static com.example.extarc.androidpushnotification.MasterActivity.drawerLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.fab;
 import static com.example.extarc.androidpushnotification.MasterActivity.toolbar;
@@ -81,13 +86,16 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
     RadioButton radioButton;
 
     RelativeLayout ansLayPuzzle;
-    ImageButton sharePuzzle;
+    Button sharePuzzleRe;
     private int STORAGE_PERMISSION_CODE = 23;
-    private File imagePath;
 
     RelativeLayout startpuzzleLayout, layoutpuzzle;
     RadioButton option1, option2, option3, option4;
     Animation animation;
+
+    String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+    String imageName = "Puzzle";
+    File imagePath = new File(directory + "/" + imageName + timeStamp + ".jpeg");
 
     public PuzzleFragment() {
         // Required empty public constructor
@@ -101,8 +109,11 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat;
     String selectedDate;
-    int ID=1;
+    int ID = 1;
     public SharedPreferences preferences;
+
+    Button seeAnsPuzzle, sharePuzzle;
+    ImageButton winspiregologo;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -115,7 +126,7 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
         final String dateStr = simpleDateFormat.format(date);
         preferences = getActivity().getSharedPreferences(Constants.SP_PERSISTENT_VALUES,
                 Context.MODE_PRIVATE);
-        ID= Integer.valueOf(preferences.getString(Constants.PUZZLE,"1"));
+        ID = Integer.valueOf(preferences.getString(Constants.PUZZLE, "1"));
         calender = Calendar.getInstance();
         selected_year = calender.get(Calendar.YEAR);
         selected_month = calender.get(Calendar.MONTH);
@@ -136,9 +147,9 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
         selectedDate = DatePicBtn.getText().toString();
         Log.d(TAG, "selectedDate" + selectedDate);
 
-        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         layoutParams.setMargins(0, 0, 0, 0);
-        toolbar.setLayoutParams(layoutParams);
+        appBarLayout.setLayoutParams(layoutParams);
         toolbartitle.setVisibility(View.GONE);
         toolbartitle2.setVisibility(View.VISIBLE);
         toolbartitle2.setText("Brain Teasers");
@@ -151,12 +162,14 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
         }
         bottomNavigation.setVisibility(View.INVISIBLE);
         fab.setVisibility(View.INVISIBLE);
-//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
-        toolbar.setNavigationIcon(null);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
+//        toolbar.setNavigationIcon(null);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         getQuestionnaire(ID, "PUZ");
+
+        seeAnsPuzzle = myview.findViewById(R.id.seeAnsPuzzle);
 
         question = myview.findViewById(R.id.questionPuzzle);
         explanation = myview.findViewById(R.id.explanationPuzzle);
@@ -165,8 +178,7 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
 
         ansLayPuzzle = myview.findViewById(R.id.ansLayout);
         ansLayPuzzle.setVisibility(View.INVISIBLE);
-        sharePuzzle = myview.findViewById(R.id.sharePuzzleReview);
-        sharePuzzle.setVisibility(View.INVISIBLE);
+        sharePuzzle = myview.findViewById(R.id.sharePuzzle);
 
         question = myview.findViewById(R.id.questionPuzzle);
         explanation = myview.findViewById(R.id.explanationPuzzle);
@@ -182,17 +194,29 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
 
         startpuzzleLayout = myview.findViewById(R.id.layoutBtnStartPuzzle);
         layoutpuzzle = myview.findViewById(R.id.layoutPuzzle);
-
+        winspiregologo = myview.findViewById(R.id.winspirelogo);
+        winspiregologo.setVisibility(View.GONE);
         sharePuzzle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isStorageReadable()) {
-                    Bitmap bitmap = takeScreenshot();
-                    saveBitmap(bitmap);
-                    shareIt();
-                    return;
-                }
-                requestStoragePermission();
+                winspiregologo.setVisibility(View.VISIBLE);
+                sharePuzzle.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isStorageReadable()) {
+                            Bitmap bitmap = takeScreenshot();
+                            saveBitmap(bitmap);
+                            shareIt();
+                            winspiregologo.setVisibility(View.VISIBLE);
+                            sharePuzzle.setVisibility(View.GONE);
+                        } else {
+                            requestStoragePermission();
+                            winspiregologo.setVisibility(View.GONE);
+                            sharePuzzle.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }, 200);
             }
         });
 
@@ -202,70 +226,160 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
 
             }
         });
-        submitpuzzle.setOnClickListener(new View.OnClickListener() {
+
+        seeAnsPuzzle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-                if (rgrouppuzzle.getCheckedRadioButtonId() == -1) {
-                    // no radio buttons are checked
-                    Toast.makeText(getContext(), "Please Select Answer", Toast.LENGTH_SHORT).show();
-                    submitpuzzle.setVisibility(View.VISIBLE);
+
+                TextView question, correctAns, explanationR;
+                ImageView ansImage;
+                question = myview.findViewById(R.id.questionReview);
+                correctAns = myview.findViewById(R.id.AnsPuzzle);
+                ansImage = myview.findViewById(R.id.ansImage);
+                explanationR = myview.findViewById(R.id.explanationReview);
+
+//                String userAns = radioButton.getText().toString();
+                question.setText(arryJobDetails.get(count).getQuestion());
+                correctAns.setText(arryJobDetails.get(count).getAnswer());
+                explanationR.setText(arryJobDetails.get(count).getComment());
+
+                ansImage.setVisibility(View.GONE);
+                correctAns.setVisibility(View.GONE);
+
+                Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+                Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+                if (layoutpuzzle.isShown()) {
+                    seeAnsPuzzle.setText("Back");
+                    ansLayPuzzle.startAnimation(slideUp);
+                    ansLayPuzzle.setVisibility(View.VISIBLE);
+                    layoutpuzzle.setVisibility(View.INVISIBLE);
+                    submitpuzzle.setVisibility(View.INVISIBLE);
+                    rgrouppuzzle.setVisibility(View.INVISIBLE);
+                    sharePuzzle.setVisibility(View.INVISIBLE);
+                    sharePuzzleRe.setVisibility(View.VISIBLE);
                 } else {
-                    // one of the radio buttons is checked
-                    int selectedId = rgrouppuzzle.getCheckedRadioButtonId();  // get selected radio button from radioGroup
-                    radioButton = (RadioButton) myview.findViewById(selectedId);  // find the radiobutton by returned id
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Are Sure you want to submit");
-                    builder.setMessage("Your selected answer is: " + radioButton.getText().toString());
-
-                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            Toast.makeText(getContext(), radioButton.getText().toString()+" is selected", Toast.LENGTH_SHORT).show();
-                            for (int i = 0; i < rgrouppuzzle.getChildCount(); i++) {
-                                rgrouppuzzle.getChildAt(i).setEnabled(false);
-                            }
-
-                            TextView question, correctAns, explanationR;
-                            ImageView ansImage;
-                            question =myview.findViewById(R.id.questionReview);
-                            correctAns = myview.findViewById(R.id.AnsPuzzle);
-                            ansImage =myview.findViewById(R.id.ansImage);
-                            explanationR = myview.findViewById(R.id.explanationReview);
-
-                            String userAns = radioButton.getText().toString();
-                            question.setText(arryJobDetails.get(count).getQuestion());
-                            correctAns.setText(arryJobDetails.get(count).getAnswer());
-                            explanationR.setText(arryJobDetails.get(count).getComment());
-
-                            submitpuzzle.setVisibility(View.INVISIBLE);
-                            rgrouppuzzle.setVisibility(View.INVISIBLE);
-                            sharePuzzle.setVisibility(View.VISIBLE);
-                            ansLayPuzzle.setVisibility(View.VISIBLE);
-                            layoutpuzzle.setVisibility(View.INVISIBLE);
-
-                            if ((correctAns.getText().toString().equalsIgnoreCase(userAns))) {
-                                correctAns.setTextColor(Color.parseColor("#40fd1a"));
-                                ansImage.setBackgroundResource(R.drawable.ic_right);
-                            } else {
-                                correctAns.setTextColor(Color.parseColor("#40fd1a"));
-                                ansImage.setBackgroundResource(R.drawable.ic_wrong);
-                            }
-                        }
-                    });
-                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            submitpuzzle.setVisibility(View.VISIBLE);
-                            layoutpuzzle.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    builder.show();
+                    seeAnsPuzzle.setText("Review");
+                    ansLayPuzzle.startAnimation(slideDown);
+                    ansLayPuzzle.setVisibility(View.INVISIBLE);
+                    layoutpuzzle.setVisibility(View.VISIBLE);
+                    submitpuzzle.setVisibility(View.INVISIBLE);
+                    rgrouppuzzle.setVisibility(View.VISIBLE);
+                    sharePuzzle.setVisibility(View.VISIBLE);
+                    sharePuzzleRe.setVisibility(View.INVISIBLE);
                 }
 
             }
         });
+
+        seeAnsPuzzle.setClickable(false);
+        seeAnsPuzzle.setEnabled(false);
+        seeAnsPuzzle.setAlpha(.5f);
+
+        rgrouppuzzle.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                for (int i = 0; i < rgrouppuzzle.getChildCount(); i++) {
+                    rgrouppuzzle.getChildAt(i).setEnabled(false);
+                }
+
+                final int selectedIdR = rgrouppuzzle.getCheckedRadioButtonId();
+                radioButton = (RadioButton) myview.findViewById(selectedIdR);
+                String UserAns = radioButton.getText().toString();
+                String CorrAns = arryJobDetails.get(count).getAnswer();
+
+                String op1 = option1.getText().toString();
+                String op2 = option2.getText().toString();
+                String op3 = option3.getText().toString();
+                String op4 = option4.getText().toString();
+
+                if (UserAns.equalsIgnoreCase(CorrAns)) {
+                    radioButton.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                    seeAnsPuzzle.setClickable(true);
+                    seeAnsPuzzle.setEnabled(true);
+                    seeAnsPuzzle.setAlpha(1f);
+                } else {
+                    radioButton.setBackgroundColor(getResources().getColor(R.color.ColorRed));
+                    seeAnsPuzzle.setClickable(true);
+                    seeAnsPuzzle.setEnabled(true);
+                    seeAnsPuzzle.setAlpha(1f);
+                    if (op1.matches(CorrAns)) {
+                        option1.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                    } else if (op2.matches(CorrAns)) {
+                        option2.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                    } else if (op3.matches(CorrAns)) {
+                        option3.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                    } else if (op4.matches(CorrAns)) {
+                        option4.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                    }
+                }
+            }
+        });
+
+//        submitpuzzle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+//                if (rgrouppuzzle.getCheckedRadioButtonId() == -1) {
+//                    // no radio buttons are checked
+//                    Toast.makeText(getContext(), "Please Select Answer", Toast.LENGTH_SHORT).show();
+//                    submitpuzzle.setVisibility(View.VISIBLE);
+//                } else {
+//                    // one of the radio buttons is checked
+//                    final int selectedId = rgrouppuzzle.getCheckedRadioButtonId();  // get selected radio button from radioGroupGk
+//                    radioButton = (RadioButton) myview.findViewById(selectedId);  // find the radiobutton by returned id
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                    builder.setTitle("Are Sure you want to submit");
+//                    builder.setMessage("Your selected answer is: " + radioButton.getText().toString());
+//
+//                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+////                            Toast.makeText(getContext(), radioButton.getText().toString()+" is selected", Toast.LENGTH_SHORT).show();
+//                            for (int i = 0; i < rgrouppuzzle.getChildCount(); i++) {
+//                                rgrouppuzzle.getChildAt(i).setEnabled(false);
+//                            }
+//
+//                            TextView question, correctAns, explanationR;
+//                            ImageView ansImage;
+//                            question =myview.findViewById(R.id.questionReview);
+//                            correctAns = myview.findViewById(R.id.AnsPuzzle);
+//                            ansImage =myview.findViewById(R.id.ansImage);
+//                            explanationR = myview.findViewById(R.id.explanationReview);
+//
+//                            String userAns = radioButton.getText().toString();
+//                            question.setText(arryJobDetails.get(count).getQuestion());
+//                            correctAns.setText(arryJobDetails.get(count).getAnswer());
+//                            explanationR.setText(arryJobDetails.get(count).getComment());
+//
+//                            submitpuzzle.setVisibility(View.INVISIBLE);
+//                            rgrouppuzzle.setVisibility(View.INVISIBLE);
+//                            sharePuzzle.setVisibility(View.VISIBLE);
+//                            ansLayPuzzle.setVisibility(View.VISIBLE);
+//                            layoutpuzzle.setVisibility(View.INVISIBLE);
+//
+//                            if ((correctAns.getText().toString().equalsIgnoreCase(userAns))) {
+//                                correctAns.setTextColor(Color.parseColor("#40fd1a"));
+//                                ansImage.setBackgroundResource(R.drawable.ic_right);
+//                            } else {
+//                                correctAns.setTextColor(Color.parseColor("#40fd1a"));
+//                                ansImage.setBackgroundResource(R.drawable.ic_wrong);
+//                            }
+//                        }
+//                    });
+//                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                            submitpuzzle.setVisibility(View.VISIBLE);
+//                            layoutpuzzle.setVisibility(View.VISIBLE);
+//                        }
+//                    });
+//                    builder.show();
+//                }
+//
+//            }
+//        });
         return myview;
     }
 
@@ -277,6 +391,7 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
         updateDate();
         Toast.makeText(getActivity(), "Selected Date: " + view.getYear() + "/" + (view.getMonth() + 1) + "/" + view.getDayOfMonth(), Toast.LENGTH_SHORT).show();
     }
+
     private void updateDate() {
         DatePicBtn.setText(new StringBuilder().append(selected_day).append("-").append(selected_month + 1).append("-").append(selected_year).append(" "));
     }
@@ -309,7 +424,6 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
 //                    BindJobsList(jsonAllJobs);
 //
 //                } catch (Exception e) {
-//                    // TODO Auto-generated catch block
 //                    e.printStackTrace();
 //                }
 //            }
@@ -472,11 +586,9 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
     }
 
     public void saveBitmap(Bitmap bitmap) {
-        long date = System.currentTimeMillis();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sDatef = new SimpleDateFormat("ddMMyyyy-HH:mm:ss");
-        String dateStr = sDatef.format(date);
-        imagePath = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES).getAbsolutePath() + "/" + "Motivation" + "-" + dateStr + ".png"); ////File imagePath
+//        imagePath = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES).getAbsolutePath() + "/" + imageName + "-" + dateStr + ".jpeg"); ////File imagePath
         FileOutputStream fos;
+//        addImageWaterMark();
         try {
             fos = new FileOutputStream(imagePath);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -491,8 +603,11 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
     }
 
     public Bitmap takeScreenshot() {
-        ansLayPuzzle.setDrawingCacheEnabled(true);
-        return ansLayPuzzle.getDrawingCache();
+        final View v1 = getActivity().getWindow().getDecorView().getRootView();
+        v1.setDrawingCacheEnabled(true);
+//        ansLayPuzzle.setDrawingCacheEnabled(true);
+//        return ansLayPuzzle.getDrawingCache();
+        return v1.getDrawingCache();
     }
 
     private void shareIt() {
@@ -501,6 +616,42 @@ public class PuzzleFragment extends Fragment implements RadioGroup.OnCheckedChan
         sharingIntent.setType("image/*");
         sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
+    }
+
+    private Bitmap addWaterMark(Bitmap src) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        Bitmap result = Bitmap.createBitmap(w, h, src.getConfig());
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(src, 0, 0, null);
+
+        Bitmap waterMark = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.winspire_go_logo);
+        canvas.drawBitmap(waterMark, 0, 0, null);
+
+        return result;
+    }
+
+    private void addImageWaterMark() {
+        Bitmap bitmap = null;
+
+        try {
+            File f = new File(directory);
+            if (f.exists()) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                try {
+                    bitmap = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
+                    Bitmap output = imageWatermark.addWatermark(getResources(), bitmap);
+                    /*save image to sdcard*/
+                    saveBitmap(output);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

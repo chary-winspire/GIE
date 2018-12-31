@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/PageBackground"
     tools:context=".MasterActivity">
 
     <android.support.design.widget.CoordinatorLayout
@@ -15,14 +16,14 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="44dp"
             android:background="@android:color/transparent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/colorGray"
                 android:gravity="center"
                 android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -35,6 +36,12 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp">
+
+                    <ImageView
+                        android:src="@drawable/winspire_go_logo"
+                        android:layout_width="40dp"
+                        android:visibility="gone"
+                        android:layout_height="match_parent" />
 
                     <TextView
                         android:id="@+id/ToolbarTitle"
@@ -50,6 +57,7 @@
                         android:id="@+id/ToolbarTitle2"
                         android:layout_width="wrap_content"
                         android:layout_height="44dp"
+
                         android:gravity="center"
                         android:layout_centerInParent="true"
                         android:text="Fragment Title"
@@ -66,7 +74,6 @@
                         android:background="@drawable/datepicker_without_outline"
                         android:drawableRight="@drawable/ic_arrow_dropdown"
                         android:gravity="center"
-                        android:onClick="showDatePickerDialog"
                         android:text="@string/Date_Picker"
                         android:textColor="@color/Black"
                         android:textStyle="bold"
@@ -132,21 +139,10 @@
                 android:layout_marginEnd="6dp"
                 android:alpha="0.7"
                 android:background="@drawable/datepicker_with_outline"
-                android:onClick="showDatePickerDialog"
                 android:text="@string/Date_Picker"
                 android:textColor="@color/White"
                 android:textStyle="bold"
                 android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/shareMoti"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="80dp"
-                android:background="@drawable/round_shape"
-                android:src="@drawable/ic_sharethis" />
 
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>

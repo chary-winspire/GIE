@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,7 +31,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,14 +51,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.jar.Attributes;
-
-import static android.os.Environment.DIRECTORY_PICTURES;
 
 public class MasterActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener,
@@ -73,17 +65,16 @@ public class MasterActivity extends AppCompatActivity implements
     public static AppBarLayout appBarLayout;
     public static NavigationView navigationView;
     public static DrawerLayout drawerLayout;
-    public  static FloatingActionButton fab;
+    public static FloatingActionButton fab;
     public static TextView toolbartitle2;
     public static TextView toolbartitle;
     private GoogleApiClient googleApiClient;
     public static Button datepicker, datepicker2;
     private final String TAG = "MasterActivity";
-
     UserDetails userDetails;
 
-    private File imagePath;
-    public static ImageButton shareit;
+    public static String directory = Environment.getExternalStorageDirectory().toString() + "/WinspireGo";
+    public static String directory_Moti = Environment.getExternalStorageDirectory().toString() + "/WinspireGo/Motivation";
 
     Button FBLogout, GLogout, SignIn;
 
@@ -93,13 +84,14 @@ public class MasterActivity extends AppCompatActivity implements
     public static final String MIXPANEL_API_TOKEN = "76156b71de6b187d01fa5e920287d4c0";
     MixpanelAPI mixpanel;
 
-    String name, email, Name, Email;
+    String name, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         requestStoragePermission();
+        createDirectory();
+
         mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_API_TOKEN);
         trackEvent();
         sentEventWithProperties();
@@ -110,26 +102,6 @@ public class MasterActivity extends AppCompatActivity implements
             mixpanel.track("App Opened");
         }
         setContentView(R.layout.activity_original);
-
-        shareit = findViewById(R.id.shareMoti);
-        shareit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //First checking if the app is already having the permission
-                if (isStorageReadable()) {
-                    //If permission is already having then showing the toast
-                    Bitmap bitmap = takeScreenshot();
-                    saveBitmap(bitmap);
-                    shareIt();
-                    //Existing the method with return
-                    mixpanel.track("Sharing Motivation Image");
-                    return;
-                }
-                //If the app has not the permission then asking for the permission
-                requestStoragePermission();
-                loadMotivation();
-            }
-        });
 
         toolbartitle = findViewById(R.id.ToolbarTitle);
         toolbartitle2 = findViewById(R.id.ToolbarTitle2);
@@ -143,19 +115,6 @@ public class MasterActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            name = extras.getString("Name");
-//            email = extras.getString("Email");
-//            //The key argument here must match that used in the other activity
-//        }else {
-//            Toast.makeText(getApplicationContext(), "NULL",Toast.LENGTH_SHORT).show();
-//        }
-
-        Intent intent = getIntent();
-        name = intent.getStringExtra("Name");
-        email = intent.getStringExtra("Email");
-
         navigationView = findViewById(R.id.navigationbar);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
@@ -165,14 +124,14 @@ public class MasterActivity extends AppCompatActivity implements
         ViewCompat.setNestedScrollingEnabled(navigationView.getChildAt(0), false);
 //        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
 
-        if (name != null && !name.isEmpty()){
+        if (name != null && !name.isEmpty()) {
             Uname.setText("Name:" + name);
-        }else {
+        } else {
             Uname.setText("Chandan");
         }
-        if (email != null && !email.isEmpty()){
+        if (email != null && !email.isEmpty()) {
             Uemail.setText("Email:" + email);
-        }else {
+        } else {
             Uemail.setText("SIN:" + "XXXXXX101");
         }
 
@@ -282,41 +241,6 @@ public class MasterActivity extends AppCompatActivity implements
         } catch (Exception ignored) {
 
         }
-    }
-    public void saveBitmap(Bitmap bitmap) {
-        long date = System.currentTimeMillis();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sDatef = new SimpleDateFormat("ddMMyyyy-HH:mm:ss");
-        String dateStr = sDatef.format(date);
-        imagePath = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES).getAbsolutePath() + "/" + "Motivation" + "-" + dateStr + ".png"); ////File imagePath
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(imagePath);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            Log.e("GREC", e.getMessage(), e);
-        } catch (IOException e) {
-            Log.e("GREC", e.getMessage(), e);
-        }
-        Toast.makeText(MasterActivity.this, "Image Saved at: " + imagePath, Toast.LENGTH_SHORT).show();
-        mixpanel.track("Saving Motivation Image on Device");
-    }
-
-    public Bitmap takeScreenshot() {
-        View rootView = findViewById(R.id.ivMotivation);
-//        View rootView = findViewById(android.R.id.content).getRootView();
-        rootView.setDrawingCacheEnabled(true);
-        return rootView.getDrawingCache();
-    }
-
-    private void shareIt() {
-        Uri uri = Uri.fromFile(imagePath);
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("image/*");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(sharingIntent, "Share via"));
-        mixpanel.track("Sharing Via");
     }
 
     @Override
@@ -476,28 +400,10 @@ public class MasterActivity extends AppCompatActivity implements
                 Intent chooser1 = Intent.createChooser(feedback, "Send Feedback Via");
                 startActivity(chooser1);
                 break;
-//
-//            case R.id.naboutApp:
-//                Intent aboutapp = new Intent(MasterActivity.this, aboutactivity.class);
-////                aboutactivity.reachUsat.setVisibility(View.INVISIBLE);
-////                aboutactivity.aboutUs.setVisibility(View.VISIBLE);
-////                aboutactivity.contactUs.setVisibility(View.VISIBLE);
-//                startActivity(aboutapp);
-//                break;
+
             case R.id.naboutUs:
-                Intent aboutus = new Intent(MasterActivity.this, aboutactivity.class);
-//                aboutactivity.reachUsat.setVisibility(View.INVISIBLE);
-//                aboutactivity.aboutUs.setVisibility(View.VISIBLE);
-//                aboutactivity.contactUs.setVisibility(View.VISIBLE);
-                startActivity(aboutus);
+                loadAbout();
                 break;
-//            case R.id.nReachus:
-//                Intent reachus = new Intent(MasterActivity.this, aboutactivity.class);
-////                aboutactivity.reachUsat.setVisibility(View.VISIBLE);
-////                aboutactivity.aboutUs.setVisibility(View.INVISIBLE);
-////                aboutactivity.contactUs.setVisibility(View.VISIBLE);
-//                startActivity(reachus);
-//                break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -510,21 +416,15 @@ public class MasterActivity extends AppCompatActivity implements
         Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("CatFrag");
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (currentFragment != null && currentFragment.isVisible()){
+        } else if (currentFragment != null && currentFragment.isVisible()) {
             finish();
-        }else {
+        } else {
             loadCategorys();
         }
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    public void showDatePickerDialog(View view) {
-        DatePickerFragment DatePicker = new DatePickerFragment();
-        DatePicker.show(getSupportFragmentManager(), "date picker");
 
     }
 
@@ -595,7 +495,7 @@ public class MasterActivity extends AppCompatActivity implements
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (toolbar.isShown() && bottomNavigation.isShown() && appBarLayout.isShown() && fab.isShown()){
+                    if (toolbar.isShown() && bottomNavigation.isShown() && appBarLayout.isShown() && fab.isShown()) {
 //                    if (getSupportActionBar().isShowing() && bottomNavigation.isShown()) {
 //                        getSupportActionBar().hide();
                         toolbar.setVisibility(View.INVISIBLE);
@@ -618,28 +518,31 @@ public class MasterActivity extends AppCompatActivity implements
     public void loadCategorys() {
         Intent intent = getIntent();
         String notificationType = intent.getStringExtra("NextFragment");
-        if(notificationType!=null){
+        if (notificationType != null) {
             intent.removeExtra("NextFragment");
 
-            if(notificationType.equalsIgnoreCase("SPDM")){
-               loadSpeedMaths();
+            if (notificationType.equalsIgnoreCase("SPDM")) {
+                loadSpeedMaths();
 
             }
-            if(notificationType.equalsIgnoreCase("GK")){
-             loadGK();
+            if (notificationType.equalsIgnoreCase("GK")) {
+                loadGK();
 
-            } if(notificationType.equalsIgnoreCase("PUZ")){
-               loadPuzzle();
+            }
+            if (notificationType.equalsIgnoreCase("PUZ")) {
+                loadPuzzle();
 
-            } if(notificationType.equalsIgnoreCase("WORD")){
+            }
+            if (notificationType.equalsIgnoreCase("WORD")) {
                 loadWordPower();
 
-            }if(notificationType.equalsIgnoreCase("MOT")){
+            }
+            if (notificationType.equalsIgnoreCase("MOT")) {
                 loadMotivation();
 
             }
 
-        }else{
+        } else {
             FragmentManager fmhome = getSupportFragmentManager();
             CategoriesFragment Catefragment = new CategoriesFragment();
             fmhome.beginTransaction().add(R.id.mainFragment, Catefragment, "CatFrag").commit();
@@ -647,9 +550,6 @@ public class MasterActivity extends AppCompatActivity implements
             Ctransaction.replace(R.id.mainFragment, Catefragment, "CatFrag").addToBackStack(null).commit();
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-
-        shareit.setVisibility(View.INVISIBLE);
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle2.setVisibility(View.INVISIBLE);
         toolbartitle.setText("Winspire Go");
@@ -660,8 +560,7 @@ public class MasterActivity extends AppCompatActivity implements
         WordPowerFragment WPfragment = new WordPowerFragment();
         fmhome.beginTransaction().add(R.id.mainFragment, WPfragment, "WordPowerFrag").commit();
         FragmentTransaction WPtransaction = getSupportFragmentManager().beginTransaction();
-        WPtransaction.replace(R.id.mainFragment, WPfragment,"WordPowerFrag").addToBackStack(WPfragment.getClass().getName()).commit();
-        shareit.setVisibility(View.INVISIBLE);
+        WPtransaction.replace(R.id.mainFragment, WPfragment, "WordPowerFrag").addToBackStack(WPfragment.getClass().getName()).commit();
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle2.setVisibility(View.INVISIBLE);
         toolbartitle.setText("Word Power");
@@ -674,10 +573,21 @@ public class MasterActivity extends AppCompatActivity implements
         fmhome.beginTransaction().add(R.id.mainFragment, ToDofragment, "ToDoFrag").commit();
         FragmentTransaction ToDotransaction = getSupportFragmentManager().beginTransaction();
         ToDotransaction.replace(R.id.mainFragment, ToDofragment, "ToDoFrag").addToBackStack(ToDofragment.getClass().getName()).commit();
-        shareit.setVisibility(View.INVISIBLE);
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle2.setVisibility(View.INVISIBLE);
         toolbartitle.setText("ToDo");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void loadAbout() {
+        FragmentManager fmhome = getSupportFragmentManager();
+        aboutFragment aboutfragment = new aboutFragment();
+        fmhome.beginTransaction().add(R.id.mainFragment, aboutfragment, "AboutFrag").commit();
+        FragmentTransaction abouttransaction = getSupportFragmentManager().beginTransaction();
+        abouttransaction.replace(R.id.mainFragment, aboutfragment, "AboutFrag").addToBackStack(aboutfragment.getClass().getName()).commit();
+        toolbartitle.setVisibility(View.VISIBLE);
+        toolbartitle2.setVisibility(View.INVISIBLE);
+        toolbartitle.setText("Winspire Go");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -687,7 +597,6 @@ public class MasterActivity extends AppCompatActivity implements
         fmMoti.beginTransaction().add(R.id.mainFragment, Motifragment, "MotiFrag").commit();
         FragmentTransaction Mtransaction = getSupportFragmentManager().beginTransaction();
         Mtransaction.replace(R.id.mainFragment, Motifragment, "MotiFrag").addToBackStack(Motifragment.getClass().getName()).commit();
-        shareit.setVisibility(View.VISIBLE);
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle2.setVisibility(View.INVISIBLE);
         toolbartitle.setText("Motivation");
@@ -700,7 +609,6 @@ public class MasterActivity extends AppCompatActivity implements
         fmPuzzle.beginTransaction().add(R.id.mainFragment, puzzlefragment, "PuzzleFrag").commit();
         FragmentTransaction Ptransaction = getSupportFragmentManager().beginTransaction();
         Ptransaction.replace(R.id.mainFragment, puzzlefragment, "PuzzleFrag").addToBackStack(puzzlefragment.getClass().getName()).commit();
-        shareit.setVisibility(View.INVISIBLE);
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle2.setVisibility(View.INVISIBLE);
         toolbartitle.setText("Puzzle");
@@ -710,10 +618,9 @@ public class MasterActivity extends AppCompatActivity implements
     public void loadGK() {
         FragmentManager fmGK = getSupportFragmentManager();
         GKFragment GKfragment = new GKFragment();
-        fmGK.beginTransaction().add(R.id.mainFragment, GKfragment,"GKFrag").commit();
+        fmGK.beginTransaction().add(R.id.mainFragment, GKfragment, "GKFrag").commit();
         FragmentTransaction GKtransaction = getSupportFragmentManager().beginTransaction();
         GKtransaction.replace(R.id.mainFragment, GKfragment, "GKFrag").addToBackStack(GKfragment.getClass().getName()).commit();
-        shareit.setVisibility(View.INVISIBLE);
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle2.setVisibility(View.INVISIBLE);
         toolbartitle.setText("General Knowledge");
@@ -726,7 +633,6 @@ public class MasterActivity extends AppCompatActivity implements
         fmspdm.beginTransaction().add(R.id.mainFragment, spdmfragment, "SPDMFrag").commit();
         FragmentTransaction spdmtransaction = getSupportFragmentManager().beginTransaction();
         spdmtransaction.replace(R.id.mainFragment, spdmfragment, "SPDMFrag").addToBackStack(spdmfragment.getClass().getName()).commit();
-        shareit.setVisibility(View.INVISIBLE);
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle2.setVisibility(View.INVISIBLE);
         toolbartitle.setText("Speed Maths");
@@ -753,6 +659,7 @@ public class MasterActivity extends AppCompatActivity implements
 //            FBLogout.setVisibility(View.VISIBLE);
         }
     }
+
     private void hideansShowGoogleLogout() {
         if (isSignedIn()) {
             navigationView = findViewById(R.id.navigationbar);
@@ -766,9 +673,27 @@ public class MasterActivity extends AppCompatActivity implements
 //            GLogout.setVisibility(View.GONE);
         }
     }
+
     private boolean isSignedIn() {
         return GoogleSignIn.getLastSignedInAccount(this) != null;
     }
 
-
+    public void createDirectory() {
+        File dir = new File(directory);
+        File dirMoti = new File(directory_Moti);
+        try {
+            if (dir.mkdir()) {
+                System.out.println("Directory created");
+            } else {
+                System.out.println("Directory is not created");
+            }
+            if (dirMoti.mkdir()) {
+                System.out.println("Directory created");
+            } else {
+                System.out.println("Directory is not created");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -7,14 +7,17 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -31,11 +34,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
@@ -65,10 +72,13 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
     TextView attemptedQue;
     TextView Totalscore;
     TextView NotAttempted;
+    TextView TimeLeft;
     int correct = 0, incorrect = 0, attempted = 0, score = 0, notAttempted = 0, your = 0;
-    LinearLayout attemptedLayout, correctLayout, incorrectLayout, notattempLayout;
+    long timeleftMilli;
+    long timeleftSec;
+    LinearLayout attemptedLayout, correctLayout, incorrectLayout, notattempLayout, timeleftLayout;
     Button tryagain;
-    TextView resultText;
+    TextView resultText, resultText1;
 
     String Question, Answer, UserAns, Comment;
     Menu nav_Menu;
@@ -84,24 +94,73 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
     Button TitleResult;
     RelativeLayout layoutscore;
     BottomNavigationView bottomNavigationView;
+    Toolbar toolbar;
+    View divider6;
+
+    Button barButton;
+    int pStatus = 0;
+    private Handler handler = new Handler();
+    TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        barButton = findViewById(R.id.barButton);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = Objects.requireNonNull(getWindow());
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.LiteGreen));
+            window.setStatusBarColor(getResources().getColor(R.color.Black));
         }
+
+        Resources res = getResources();
+        Drawable drawable = res.getDrawable(R.drawable.round);
+        final ProgressBar mProgress = (ProgressBar) findViewById(R.id.circularProgressbar);
+        mProgress.setProgress(0);   // Main Progress
+        mProgress.setSecondaryProgress(100); // Secondary Progress
+        mProgress.setMax(100); // Maximum Progress
+        mProgress.setProgressDrawable(drawable);
+        tv = (TextView) findViewById(R.id.tv);
+
+//        mProgress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.Black), PorterDuff.Mode.SRC_IN);
+//        mProgress.getProgressDrawable().setColorFilter(getResources().getColor(R.color.White), PorterDuff.Mode.SRC_IN);
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (pStatus < 100) {
+//                    pStatus += 1;
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mProgress.setProgress(pStatus);
+//                            tv.setText(pStatus + "%");
+////                            if (jsonArray.length() >= 6) {
+////                                your = score * 10;
+////                                mProgress.setProgress(your);
+////                                tv.setText(your + "%");
+////                            }else {
+////                                your = score * 20;
+////                                mProgress.setProgress(your);
+////                                tv.setText(your + "%");
+////                            }
+//                        }
+//                    });
+//                }
+//            }
+//        }).start();
 
         Intent intent = getIntent();
         score = intent.getIntExtra("score", 0);
         incorrect = intent.getIntExtra("wrong", 0);
         notAttempted = intent.getIntExtra("notattempted", 0);
         arraylistAns = intent.getStringExtra("userArray");
+        timeleftMilli = intent.getLongExtra("timeleftMilli", 0);
         Log.d(TAG, "arraylistAns" + arraylistAns);
+
+        timeleftSec = TimeUnit.MILLISECONDS.toSeconds(timeleftMilli);
 
         correctAns = (TextView) findViewById(R.id.correct);
         incorrectAns = (TextView) findViewById(R.id.incorrect);
@@ -110,16 +169,20 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
         NotAttempted = (TextView) findViewById(R.id.notAttempted);
         tryagain = (Button) findViewById(R.id.tryagainResult);
         resultText = (TextView) findViewById(R.id.resultText);
+        resultText1 = (TextView) findViewById(R.id.resultText1);
+        TimeLeft = (TextView) findViewById(R.id.timeLeft);
 
         attemptedLayout = (LinearLayout) findViewById(R.id.attemptedlayout);
         correctLayout = (LinearLayout) findViewById(R.id.correctlayout);
         incorrectLayout = (LinearLayout) findViewById(R.id.incorrectlayout);
         notattempLayout = (LinearLayout) findViewById(R.id.notattemptedlayout);
+        timeleftLayout = (LinearLayout) findViewById(R.id.timeLeftlayout);
 
         bottomNavigationView = findViewById(R.id.BottombarSecond);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         layoutscore = findViewById(R.id.layoutscore);
         TitleResult = findViewById(R.id.titleresult);
+        divider6 = findViewById(R.id.divider6);
 
         tryagain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,18 +211,32 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
         }
         if (jsonArray.length() >= 6) {
             your = score * 10;
+            mProgress.setProgress(your);
+            tv.setText(your + "%");
             Totalscore.setText("Total Score  :    " + your);
             attemptedQue.setText("  " + attempted + " / " + "10");
             NotAttempted.setText("  " + notAttempted + " / " + "10");
+            TimeLeft.setText(" " + timeleftSec + " / " + "120 Seconds");
             pieData.add(new SliceValue(notAttempted, Color.BLUE).setLabel("Not Attempted"));
             pieData.add(new SliceValue(score, Color.GREEN).setLabel("Correct Answers"));
             pieData.add(new SliceValue(incorrect, Color.RED).setLabel("Incorrect Answers"));
 
             TitleResult.setBackgroundResource(R.color.SPDM_Toolbar);
-            bottomNavigationView.setBackgroundResource(R.color.SPDM_Toolbar);
-            layoutscore.setBackgroundResource(R.color.SPDM_normal);
+            bottomNavigationView.setBackgroundResource(R.color.SPDM_dark);
+            layoutscore.setBackgroundResource(R.color.SPDM_Toolbar);
+            barButton.setBackgroundResource(R.color.SPDM_dark);
+            barButton.setTextColor(getResources().getColor(R.color.White));
+
+            TitleResult.setTextColor(getResources().getColor(R.color.Black));
+            resultText.setTextColor(getResources().getColor(R.color.Black));
+            resultText1.setTextColor(getResources().getColor(R.color.Black));
+            attemptedQue.setTextColor(getResources().getColor(R.color.Black));
+            divider6.setBackgroundResource(R.color.Black);
         } else {
             your = score * 20;
+            mProgress.setProgress(your);
+            tv.setText(your + "%");
+
             Totalscore.setText("Total Score: " + your);
             attemptedQue.setText("  " + attempted + " / " + "5");
             NotAttempted.setText("  " + notAttempted + " / " + "5");
@@ -167,9 +244,23 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
             pieData.add(new SliceValue(score * 2, Color.GREEN).setLabel("Correct Answers"));
             pieData.add(new SliceValue(incorrect * 2, Color.RED).setLabel("Incorrect Answers"));
 
-            TitleResult.setBackgroundResource(R.color.GK_Toolbar);
-            bottomNavigationView.setBackgroundResource(R.color.GK_Toolbar);
-            layoutscore.setBackgroundResource(R.color.GK_normal);
+            TitleResult.setBackgroundResource(R.color.GK);
+            bottomNavigationView.setBackgroundResource(R.color.GK_dark);
+            layoutscore.setBackgroundResource(R.color.GK);
+            barButton.setBackgroundResource(R.color.GK_dark);
+            barButton.setTextColor(getResources().getColor(R.color.White));
+
+            TitleResult.setTextColor(getResources().getColor(R.color.White));
+            resultText.setTextColor(getResources().getColor(R.color.White));
+            resultText1.setTextColor(getResources().getColor(R.color.White));
+            attemptedQue.setTextColor(getResources().getColor(R.color.White));
+            divider6.setBackgroundResource(R.color.White);
+
+            Totalscore.setTextColor(getResources().getColor(R.color.White));
+            attemptedQue.setTextColor(getResources().getColor(R.color.White));
+            correctAns.setTextColor(getResources().getColor(R.color.White));
+            incorrectAns.setTextColor(getResources().getColor(R.color.White));
+            NotAttempted.setTextColor(getResources().getColor(R.color.White));
         }
 
         if (your == 100) {
@@ -182,7 +273,7 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
             resultText.setText("Your Score 40 to 50");
         } else if (your >= 20) {
             resultText.setText("Your Score 20 to 30");
-        }else resultText.setText("Your Score below 20");
+        } else resultText.setText("Your Score below 20");
 
         leftTorightAnim = AnimationUtils.loadAnimation(this, R.anim.lefttorightin);
         righttoleftAnim = AnimationUtils.loadAnimation(this, R.anim.righttoleftin);
@@ -229,6 +320,12 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
                 listView.setAdapter(customAdapter);
                 customAdapter.notifyDataSetChanged();
 
+                if (jsonArray.length() >= 6){
+                    listView.setBackgroundResource(R.color.PageBackground);
+                }else {
+                    listView.setBackgroundResource(R.color.PageBackground);
+                }
+
                 Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
                 Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
                 if (layoutscore.isShown()) {
@@ -236,11 +333,14 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
                     listView.setVisibility(View.VISIBLE);
                     layoutscore.setVisibility(View.INVISIBLE);
                     bottomNavigationView.getMenu().findItem(R.id.b1Review).setTitle("Score Card");
+                    barButton.setVisibility(View.VISIBLE);
+                    barButton.setText("Test Review");
                 } else {
                     listView.startAnimation(slideDown);
                     listView.setVisibility(View.INVISIBLE);
                     layoutscore.setVisibility(View.VISIBLE);
                     bottomNavigationView.getMenu().findItem(R.id.b1Review).setTitle("Review");
+                    barButton.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -262,7 +362,6 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
             try {
                 return jsonArray.getJSONObject(position);
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -274,6 +373,7 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
         }
 
         class ViewHolder {
+            private ImageView resultView;
             private TextView question;
             private TextView userAnswer;
             private TextView correctAnswer;
@@ -296,11 +396,13 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
             convertView = getLayoutInflater().inflate(R.layout.review, parent, false);
 
             LinearLayout reviewLayout = convertView.findViewById(R.id.reviewResultLayout);
-            LinearLayout correctAnslayout = convertView.findViewById(R.id.correctAnslayoutResult);
             TextView question = convertView.findViewById(R.id.question);
             TextView userAnswer = convertView.findViewById(R.id.userAnswer);
             TextView correctAnswer = convertView.findViewById(R.id.correctAnswer);
             TextView explanation = convertView.findViewById(R.id.explanation);
+            ImageView resultView = convertView.findViewById(R.id.imageResult);
+
+            userAnswer.setVisibility(View.GONE);
 
             try {
                 jsonArray = new JSONArray(arraylistAns);
@@ -335,11 +437,13 @@ public class ResultActivity extends AppCompatActivity implements BottomNavigatio
             }
 
             if ((userAnswer.getText().toString().equals(correctAnswer.getText().toString()))) {
-                userAnswer.setTextColor(Color.parseColor("#40fd1a"));
-                correctAnslayout.setVisibility(View.GONE);
+                userAnswer.setTextColor(Color.parseColor("#FF1A9601"));
+                resultView.setBackgroundResource(R.drawable.ic_right);
+                correctAns.setVisibility(View.GONE);
             } else {
                 userAnswer.setTextColor(Color.parseColor("#f20b3d"));
-                correctAnslayout.setVisibility(View.VISIBLE);
+                resultView.setBackgroundResource(R.drawable.ic_wrong);
+                correctAns.setVisibility(View.VISIBLE);
             }
 
             return convertView;

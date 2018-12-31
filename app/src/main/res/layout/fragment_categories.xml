@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="50dp"
+    android:orientation="vertical"
     tools:context=".CategoriesFragment">
 
     <ScrollView
         android:id="@+id/catScrollView"
+        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,11 +23,18 @@
                 android:id="@+id/cateMotivation"
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
-                android:background="@drawable/cat_motivation"
+                android:background="@drawable/motivation"
                 android:gravity="bottom"
                 android:orientation="vertical">
 
+                <!--<ImageView-->
+                    <!--android:background="@drawable/transparent_black_layer"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:alpha="0.4"-->
+                    <!--android:layout_height="match_parent" />-->
+
                 <TextView
+                    android:id="@+id/MotiTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
@@ -36,6 +46,8 @@
                     android:textStyle="bold" />
 
                 <View
+                    android:id="@+id/dividerMoti"
+                    android:layout_below="@+id/MotiTitle"
                     android:layout_width="80dp"
                     android:layout_height="2dp"
                     android:layout_marginStart="30dp"
@@ -43,6 +55,7 @@
                     android:background="@color/White" />
 
                 <LinearLayout
+                    android:layout_below="@+id/dividerMoti"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -57,6 +70,7 @@
                         android:textSize="14sp" />
 
                     <ImageButton
+                        android:id="@+id/ibtnMotivation"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:layout_marginStart="6dp"
@@ -66,83 +80,6 @@
                         android:src="@drawable/ic_play" />
 
                 </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/cateReminder"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="#155800"
-                android:gravity="bottom"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:baselineAligned="false">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="7.5"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_marginEnd="6dp"
-                        android:text="@string/Cat_ToDo_Des"
-                        android:textColor="@color/White"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="2.5"
-                    android:gravity="center">
-
-                    <ImageButton
-                        android:id="@+id/button"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/rectangle_shapre_white"
-                        android:gravity="center"
-                        android:paddingTop="6dp"/>
-
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="20dp"
-                        android:layout_alignTop="@+id/button"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="-10dp"
-                        android:background="@drawable/rectangle_shape"
-                        android:gravity="center"
-                        android:text="New"
-                        android:textColor="@color/White" />
-
-                    <TextView
-                        android:layout_width="64dp"
-                        android:layout_height="24dp"
-                        android:layout_alignStart="@+id/button"
-                        android:layout_alignTop="@+id/button"
-                        android:layout_alignEnd="@+id/button"
-                        android:layout_alignBottom="@+id/button"
-                        android:gravity="center"
-                        android:paddingTop="6dp"
-                        android:textStyle="bold"
-                        android:textSize="12sp"
-                        android:text="Add Task"
-                        android:textColor="@color/White" />
-
-                </RelativeLayout>
-
 
             </LinearLayout>
 
@@ -187,6 +124,7 @@
                         android:textSize="14sp" />
 
                     <ImageButton
+                        android:id="@+id/ibtnSpdm"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:layout_marginStart="6dp"
@@ -241,6 +179,7 @@
                         android:textSize="14sp" />
 
                     <ImageButton
+                        android:id="@+id/ibtnWp"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:layout_marginStart="6dp"
@@ -278,7 +217,7 @@
                     android:layout_height="2dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/LiteGreen" />
+                    android:background="@color/White" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -295,6 +234,7 @@
                         android:textSize="14sp" />
 
                     <ImageButton
+                        android:id="@+id/ibtnPuzzle"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:layout_marginStart="6dp"
@@ -332,7 +272,7 @@
                     android:layout_height="2dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/LiteGreen" />
+                    android:background="@color/White" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -349,6 +289,7 @@
                         android:textSize="14sp" />
 
                     <ImageButton
+                        android:id="@+id/ibtnGk"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:layout_marginStart="6dp"
@@ -403,6 +344,7 @@
                         android:textSize="14sp" />
 
                     <ImageButton
+                        android:id="@+id/ibtnTopic"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:layout_gravity=""
@@ -420,4 +362,84 @@
 
     </ScrollView>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/cateReminder"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:background="#000000"
+        android:baselineAligned="false"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="7.5"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="6dp"
+                android:text="@string/Cat_ToDo_Des"
+                android:textColor="@color/White"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2.5"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/ibtnTodo"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rectangle_shapre_white"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="15dp"
+                android:layout_alignTop="@+id/ibtnTodo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-10dp"
+                android:background="@drawable/rectangle_shape"
+                android:gravity="center|bottom"
+                android:text="New"
+                android:textColor="@color/White"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="24dp"
+                android:layout_alignStart="@+id/ibtnTodo"
+                android:layout_alignTop="@+id/ibtnTodo"
+                android:layout_alignEnd="@+id/ibtnTodo"
+                android:layout_alignBottom="@+id/ibtnTodo"
+                android:gravity="center"
+                android:text="Add Task"
+                android:textColor="@color/White"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

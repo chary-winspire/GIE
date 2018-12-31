@@ -5,29 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:layout_gravity="center"
-    android:gravity="top"
+    android:layout_gravity="center_vertical"
+    android:gravity="center"
     android:orientation="vertical">
 
     <Button
         android:id="@+id/wpTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/LiteRedBTN"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@color/QuoraRed"
         android:drawableEnd="@drawable/ic_arrow_dropdown"
         android:paddingRight="40dp"
         android:text="dapper [ DAP-er ]"
-        android:textAllCaps="false"
+        android:textAllCaps="true"
         android:textColor="#fff"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="14sp" />
 
     <com.github.aakira.expandablelayout.ExpandableRelativeLayout
         android:id="@+id/expandableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/wpTitle"
-        android:background="#909af1e9"
+        android:background="#90d9dada"
         android:padding="10dp"
         app:ael_duration="400"
         app:ael_expanded="true"
@@ -39,28 +37,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
+            android:textStyle="bold"
             android:gravity="center"
             android:text="Type"
             android:textColor="@color/Black" />
 
         <TextView
-            android:id="@+id/wpMeaning"
+            android:id="@+id/wpMeaning1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:layout_below="@+id/wpType"
             android:layout_marginBottom="6dp"
-            android:text="@string/WPMeaning"
-            android:textColor="@color/Black" />
+            android:text="Meaning1"
+            android:textColor="@color/Black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/wpMeaning2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wpMeaning1"
+            android:layout_marginBottom="6dp"
+            android:text="Meaning2"
+            android:textColor="@color/Black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/wpMeaning3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wpMeaning2"
+            android:layout_marginBottom="6dp"
+            android:text="Meaning3"
+            android:textColor="@color/Black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/wpMeaning4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wpMeaning3"
+            android:layout_marginBottom="6dp"
+            android:text="Meaning4"
+            android:textColor="@color/Black"
+            android:textSize="12sp" />
 
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@+id/wpMeaning"
+            android:layout_height="1dp"
+            android:layout_below="@+id/wpMeaning4"
             android:layout_marginBottom="6dp"
-            android:background="@color/Black" />
+            android:background="@color/LiteBlack" />
 
         <TextView
             android:id="@+id/wpExample"
@@ -69,17 +98,54 @@
             android:layout_below="@+id/divider"
             android:text="@string/WPExample"
             android:textColor="@color/Black"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <View
             android:id="@+id/divider1"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:layout_below="@+id/wpExample"
             android:layout_marginBottom="6dp"
-            android:background="@color/Black" />
+            android:background="@color/LiteBlack" />
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_below="@+id/wpExample"-->
+            <!--android:layout_height="40dp">-->
+
+            <Button
+                android:id="@+id/wpiknow"
+                android:layout_width="match_parent"
+                android:text="I Already Know this Word"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:layout_below="@+id/wpExample"
+                android:background="#1da400"
+                android:textColor="@color/White"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/wplearned"
+                android:layout_width="match_parent"
+                android:text="I Learned this Word"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:layout_below="@+id/wpiknow"
+                android:background="#194ab1"
+                android:textColor="@color/White"
+                android:layout_height="wrap_content" />
+
+        <!--</LinearLayout>-->
+
 
     </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
 
 </LinearLayout>

@@ -1,41 +1,34 @@
 package com.example.extarc.androidpushnotification;
 
 
-import android.content.Intent;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
-
+import static com.example.extarc.androidpushnotification.MasterActivity.appBarLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.bottomNavigation;
 import static com.example.extarc.androidpushnotification.MasterActivity.drawerLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.fab;
 import static com.example.extarc.androidpushnotification.MasterActivity.toolbar;
 import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle;
 import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle2;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 /**
@@ -43,9 +36,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 public class CategoriesFragment extends Fragment implements View.OnClickListener {
 
-    LinearLayout motivation, spdm, gk, puzzle, poll, tofw, reminder, wordpower;
+    LinearLayout motivation, spdm, gk, puzzle, tofw, reminder, wordpower;
+    ImageButton ibtnmotivation, ibtnspdm, ibtngk, ibtnpuzzle, ibtntofw, ibtnreminder, ibtnwordpower;
+
+//    RelativeLayout motivation;
 
     ScrollView scrollView;
+    Animation slideUp, slideDown;
 //    RelativeLayout reminder;
 
     public CategoriesFragment() {
@@ -58,13 +55,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
 
-        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-        layoutParams.setMargins(30, 16, 30, 6);
-        toolbar.setLayoutParams(layoutParams);
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        layoutParams.setMargins(30, 16, 30, 0);
+        appBarLayout.setLayoutParams(layoutParams);
         toolbartitle2.setVisibility(View.GONE);
         toolbartitle.setVisibility(View.VISIBLE);
         toolbartitle.setText("Winspire Go");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.Black));
+        toolbartitle.setTextColor(getResources().getColor(R.color.Black));
         toolbar.setBackgroundColor(getResources().getColor(R.color.White));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
@@ -84,6 +81,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         reminder = view.findViewById(R.id.cateReminder);
         wordpower = view.findViewById(R.id.cateWord);
 
+        ibtnmotivation = view.findViewById(R.id.ibtnMotivation);
+        ibtnspdm = view.findViewById(R.id.ibtnSpdm);
+        ibtngk = view.findViewById(R.id.ibtnGk);
+        ibtnpuzzle = view.findViewById(R.id.ibtnPuzzle);
+        ibtntofw = view.findViewById(R.id.ibtnTopic);
+        ibtnreminder = view.findViewById(R.id.ibtnTodo);
+        ibtnwordpower = view.findViewById(R.id.ibtnWp);
+
         motivation.setOnClickListener(this);
         spdm.setOnClickListener(this);
         gk.setOnClickListener(this);
@@ -92,6 +97,50 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         reminder.setOnClickListener(this);
         wordpower.setOnClickListener(this);
 
+        ibtnmotivation.setOnClickListener(this);
+        ibtnspdm.setOnClickListener(this);
+        ibtngk.setOnClickListener(this);
+        ibtnpuzzle.setOnClickListener(this);
+        ibtntofw.setOnClickListener(this);
+        ibtnreminder.setOnClickListener(this);
+        ibtnwordpower.setOnClickListener(this);
+
+        slideUp = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+        slideUp.setDuration(500);
+        slideDown = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
+        slideDown.setDuration(500);
+        scrollView = view.findViewById(R.id.catScrollView);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() == MotionEvent.ACTION_UP && scrollView != null) {
+                    reminder.setVisibility(View.VISIBLE);
+                    reminder.startAnimation(slideUp);
+                }else {
+                    reminder.setVisibility(View.GONE);
+                    reminder.startAnimation(slideUp);
+                }
+                return false;
+            }
+        });
+
+        scrollView.getViewTreeObserver()
+                .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        if (scrollView.getChildAt(0).getBottom()
+                                <= (scrollView.getHeight() + scrollView.getScrollY())) {
+                            //scroll view is at bottom
+                            reminder.setVisibility(View.GONE);
+                            reminder.startAnimation(slideDown);
+                        } else {
+                            //scroll view is not at bottom
+                            reminder.setVisibility(View.VISIBLE);
+                            reminder.startAnimation(slideUp);
+                        }
+                    }
+                });
 
         return view;
     }
@@ -135,6 +184,45 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 }
                 break;
             case R.id.cateWord:
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction().replace(R.id.mainFragment, new WordPowerFragment()).commit();
+                }
+                break;
+
+            case R.id.ibtnMotivation:
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction().replace(R.id.mainFragment, new MotivationFragment()).commit();
+                }
+                break;
+
+            case R.id.ibtnSpdm:
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction().replace(R.id.mainFragment, new SpeedMathsFragment()).commit();
+                }
+                break;
+
+            case R.id.ibtnGk:
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction().replace(R.id.mainFragment, new GKFragment()).commit();
+                }
+                break;
+
+            case R.id.ibtnPuzzle:
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction().replace(R.id.mainFragment, new PuzzleFragment()).commit();
+                }
+                break;
+            case R.id.ibtnTodo:
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction().replace(R.id.mainFragment, new ReminderFragment()).commit();
+                }
+                break;
+            case R.id.ibtnTopic:
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction().replace(R.id.mainFragment, new TopicFragment()).commit();
+                }
+                break;
+            case R.id.ibtnWp:
                 if (getFragmentManager() != null) {
                     getFragmentManager().beginTransaction().replace(R.id.mainFragment, new WordPowerFragment()).commit();
                 }

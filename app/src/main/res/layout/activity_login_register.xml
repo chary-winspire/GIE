@@ -19,7 +19,7 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:contentDescription="@string/winspire_logo"
-            android:src="@drawable/winspire_logo" />
+            android:src="@drawable/winspire_go_logo" />
 
         <TextView
             android:layout_width="147dp"

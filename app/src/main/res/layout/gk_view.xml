@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginTop="50dp"
-    android:layout_marginBottom="50dp"
-    android:gravity="center"
     android:layout_height="match_parent"
+    android:layout_marginTop="44dp"
+    android:background="@color/PageBackground"
+    android:gravity="center"
     tools:context=".GKFragment">
 
     <RelativeLayout
@@ -14,202 +13,212 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/questionGkpanel"
+        <TextView
+            android:id="@+id/questionGk"
             android:layout_width="match_parent"
-            android:background="#edbfb3"
-            android:layout_marginTop="10dp"
-            android:layout_height="200dp">
-
-            <TextView
-                android:id="@+id/questionGk"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_margin="6dp"
-                android:gravity="center"
-                android:text="General Knowledge Question"
-                android:textColor="@color/Black"
-                android:textSize="20sp" />
-
-        </RelativeLayout>
-
-
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="14dp"
+            android:padding="10dp"
+            android:gravity="start"
+            android:text="General Knowledge Question"
+            android:textColor="@color/Black"
+            android:textSize="18sp" />
 
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_below="@+id/questionGk"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/questionGkpanel"
             android:background="?android:attr/listDivider" />
 
         <RadioGroup
             android:id="@+id/rgroupGk"
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/divider">
+            android:layout_marginTop="20dp">
 
             <RadioButton
                 android:id="@+id/gkOp1"
-                android:button="@null"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="center"
+                android:layout_marginBottom="3dp"
+                android:padding="6dp"
                 android:background="@drawable/btn_gk"
-                android:layout_width="240dp"
-                android:layout_gravity="center"
-                android:layout_height="46dp"
+                android:button="@null"
+                android:gravity="center"
                 android:text="Option One"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/gkOp2"
-                android:button="@null"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="center"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/btn_gk"
-                android:layout_width="240dp"
-                android:layout_gravity="center"
-                android:layout_height="46dp"
+                android:button="@null"
+                android:padding="6dp"
+                android:gravity="center"
                 android:text="Option Two"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/gkOp3"
-                android:button="@null"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="center"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/btn_gk"
-                android:layout_width="240dp"
-                android:layout_gravity="center"
-                android:layout_height="46dp"
+                android:button="@null"
+                android:padding="6dp"
+                android:gravity="center"
                 android:text="Option Three"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/gkOp4"
-                android:button="@null"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="center"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/btn_gk"
-                android:layout_width="240dp"
-                android:layout_gravity="center"
-                android:layout_height="46dp"
+                android:button="@null"
+                android:padding="6dp"
+                android:gravity="center"
                 android:text="Option Four"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
         </RadioGroup>
 
         <LinearLayout
             android:id="@+id/ansLayoutGK"
-            android:orientation="vertical"
-            android:weightSum="2"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_below="@id/questionGkpanel"
-            android:layout_height="184dp">
+            android:layout_height="184dp"
+            android:layout_below="@id/questionGk"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:weightSum="2">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                android:weightSum="3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Your Answer"
-                    android:textStyle="bold"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/userAnsGK"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:textSize="26sp"
-                    android:textStyle="normal"
                     android:text="User Answer"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" />
+                    android:textSize="26sp"
+                    android:textStyle="normal" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                android:weightSum="3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textStyle="bold"
                     android:text="Correct Answer is: "
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/correctAnsGK"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:textSize="26sp"
-                    android:textStyle="normal"
-                    android:textColor="@color/LiteGreen"
                     android:text="Correct Answer"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" />
+                    android:textColor="@color/LiteGreen"
+                    android:textSize="26sp"
+                    android:textStyle="normal" />
 
             </LinearLayout>
         </LinearLayout>
 
         <Button
-            android:textColor="@color/White"
-            android:text="Submit"
+            android:id="@+id/shareGK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share this GK"
+            android:textSize="12sp"
+            android:padding="6dp"
+            android:visibility="gone"
+            android:textColor="@color/Black"
+            android:drawableStart="@drawable/ic_share"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/shape" />
+
+        <Button
             android:id="@+id/submitGk"
             android:layout_width="100dp"
-            android:visibility="gone"
+            android:layout_height="50dp"
             android:layout_below="@+id/rgroupGk"
             android:layout_centerInParent="true"
-            android:layout_height="50dp" />
+            android:text="Submit"
+            android:textColor="@color/White"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/nextGk"
-            android:background="@drawable/ic_right_arrow"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp"
             android:layout_below="@+id/rgroupGk"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="60dp" />
+            android:layout_marginTop="40dp"
+            android:visibility="gone"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/ic_right_arrow" />
 
         <Button
             android:id="@+id/previousGk"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:visibility="gone"
             android:layout_below="@+id/rgroupGk"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="60dp"
-            android:background="@drawable/ic_back_arrow" />
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_back_arrow"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -217,8 +226,8 @@
         android:id="@+id/layoutBtnStartGK"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/startGK"
@@ -235,9 +244,9 @@
 
     <ListView
         android:id="@+id/listviewGK"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
     </ListView>
 

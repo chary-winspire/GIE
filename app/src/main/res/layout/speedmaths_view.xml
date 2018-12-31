@@ -3,8 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginTop="45dp"
+    android:layout_marginTop="44dp"
     android:gravity="center">
+
+    <View
+        android:background="#dca503"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"/>
 
     <RelativeLayout
         android:id="@+id/mainSpdmLayout"
@@ -147,7 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="#f4ecc6"
                 android:gravity="center">
@@ -169,7 +174,7 @@
             android:id="@+id/btnpanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:layout_below="@+id/rggplayout"
             android:layout_centerInParent="true">
 
@@ -205,10 +210,10 @@
         <SeekBar
             android:id="@+id/seekbarSpdmtimer"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
+            android:layout_height="6dp"
             android:layout_below="@+id/questionpanel"
             android:layout_marginTop="10dp"
-            android:background="?android:attr/listDivider" />
+            android:progressDrawable="@drawable/progress" />
 
         <RelativeLayout
             android:id="@+id/rggplayout"
@@ -216,7 +221,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/seekbarSpdmtimer"
             android:layout_centerInParent="true"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="6dp">
 
             <RadioGroup

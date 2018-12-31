@@ -5,19 +5,46 @@
     android:layout_height="match_parent"
     tools:context=".MotivationFragment">
 
+    <ImageButton
+        android:id="@+id/shareMoti"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:textColor="@color/White"
+        android:src="@drawable/ic_share"
+        android:tint="@color/Black"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/round_shape" />
+
     <RelativeLayout
         android:id="@+id/motivationLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/ivMotivation"
+        <RelativeLayout
+            android:id="@+id/ivMotivationLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/Moti_Descrip"
-            android:gravity="center"
-            android:src="@drawable/ic_imagebg" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivMotivation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/Moti_Descrip"
+                android:gravity="center" />
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="100dp"
+                android:src="@drawable/winspire_go_logo" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,12 +83,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="80dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
             android:orientation="horizontal"
             android:weightSum="2">
 
@@ -70,19 +94,21 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="30dp"
-                android:layout_marginEnd="80dp"
+                android:layout_marginEnd="100dp"
                 android:layout_weight="1"
-                android:background="@drawable/round_shape"
+                android:tint="@color/Black"
+                android:background="@android:color/transparent"
                 android:src="@drawable/ic_back" />
 
             <ImageButton
                 android:id="@+id/nextMoti"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="80dp"
+                android:layout_marginStart="100dp"
                 android:layout_marginEnd="30dp"
                 android:layout_weight="1"
-                android:background="@drawable/round_shape"
+                android:tint="@color/Black"
+                android:background="@android:color/transparent"
                 android:src="@drawable/ic_next" />
 
         </LinearLayout>

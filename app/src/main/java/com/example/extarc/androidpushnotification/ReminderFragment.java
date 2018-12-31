@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.example.extarc.androidpushnotification.MasterActivity.appBarLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.bottomNavigation;
 import static com.example.extarc.androidpushnotification.MasterActivity.drawerLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.fab;
@@ -91,23 +93,26 @@ public class ReminderFragment extends Fragment {
         SQLdb = RDBHelper.getWritableDatabase();
 
 
-        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         layoutParams.setMargins(0, 0, 0, 0);
-        toolbar.setLayoutParams(layoutParams);
-        toolbartitle.setVisibility(View.GONE);
-        toolbartitle2.setVisibility(View.VISIBLE);
-        toolbartitle2.setText("ToDo");
-        toolbartitle2.setTextColor(getResources().getColor(R.color.White));
-        toolbar.setBackgroundColor(getResources().getColor(R.color.QuoraRed));
+        appBarLayout.setLayoutParams(layoutParams);
+//        toolbar.setTitle("Speed Maths");
+        toolbartitle.setVisibility(View.VISIBLE);
+        toolbartitle2.setVisibility(View.INVISIBLE);
+        toolbartitle.setText("ToDo");
+        toolbartitle.setTextColor(getResources().getColor(R.color.White));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.LiteBlack));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = Objects.requireNonNull(getActivity()).getWindow();
+            Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.QuoraRed));
+            window.setStatusBarColor(getResources().getColor(R.color.Black));
         }
         bottomNavigation.setVisibility(View.GONE);
         fab.setVisibility(View.VISIBLE);
+//        toolbar.setNavigationIcon(null);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu_white));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

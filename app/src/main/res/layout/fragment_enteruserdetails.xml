@@ -1,148 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/PageBackground"
     android:orientation="vertical"
     tools:context=".EntryUserDetailsFragment">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/profileSkip"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="50dp"
+                android:background="@color/White"
+                android:gravity="center"
+                android:text="Skip >>"
+                android:textAllCaps="false"
+                android:textColor="@color/TwitterBlue"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/profileImage"
-                android:layout_marginTop="20dp"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/round_shape"
-                android:contentDescription="TODO" android:src="@drawable/education" />
+                android:contentDescription="TODO"
+                android:src="@drawable/education" />
 
             <Spinner
                 android:id="@+id/profileCategory"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/TwitterBlue"
-                android:popupBackground="@color/TwitterBlue"
                 android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/TwitterBlue"
                 android:entries="@array/SpinnerItems"
+                android:popupBackground="@color/TwitterBlue"
                 android:spinnerMode="dialog">
 
             </Spinner>
+
             <Spinner
                 android:id="@+id/profileGender"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/TwitterBlue"
-                android:popupBackground="@color/TwitterBlue"
                 android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/TwitterBlue"
                 android:entries="@array/Gender"
+                android:popupBackground="@color/TwitterBlue"
                 android:spinnerMode="dialog">
 
             </Spinner>
 
             <EditText
-                android:drawableTint="@color/TwitterBlue"
-                android:drawableStart="@drawable/ic_parent"
                 android:id="@+id/profileParent"
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_parent"
+                android:drawableTint="@color/TwitterBlue"
                 android:hint="Enter Parent Name"
                 android:inputType="textPersonName"
                 android:textColor="@color/TwitterBlue" />
 
             <EditText
-                android:drawableTint="@color/TwitterBlue"
-                android:drawableStart="@drawable/ic_user"
                 android:id="@+id/profileName"
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_user"
+                android:drawableTint="@color/TwitterBlue"
                 android:hint="Enter Name"
                 android:inputType="textPersonName"
                 android:textColor="@color/TwitterBlue" />
 
             <EditText
-                android:drawableTint="@color/TwitterBlue"
-                android:drawableStart="@drawable/ic_email"
                 android:id="@+id/profileEmail"
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_email"
+                android:drawableTint="@color/TwitterBlue"
                 android:hint="Enter Email ID"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/TwitterBlue" />
 
             <EditText
-                android:drawableTint="@color/TwitterBlue"
-                android:drawableStart="@drawable/ic_mobile_icon"
                 android:id="@+id/profileMobile"
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_mobile_icon"
+                android:drawableTint="@color/TwitterBlue"
                 android:hint="Enter Mobile No."
                 android:inputType="phone"
                 android:textColor="@color/TwitterBlue" />
 
             <EditText
-                android:drawableTint="@color/TwitterBlue"
-                android:drawableStart="@drawable/ic_school"
                 android:id="@+id/profileSchool"
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_school"
+                android:drawableTint="@color/TwitterBlue"
                 android:hint="Enter School (or) College Name"
                 android:inputType="textPostalAddress"
                 android:textColor="@color/TwitterBlue" />
 
             <EditText
-                android:drawableTint="@color/TwitterBlue"
-                android:drawableStart="@drawable/ic_class"
                 android:id="@+id/profileClass"
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_class"
+                android:drawableTint="@color/TwitterBlue"
                 android:hint="Enter Class"
                 android:inputType="text"
                 android:textColor="@color/TwitterBlue" />
 
             <Button
                 android:id="@+id/profileSubmit"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="Submit"
                 android:layout_width="160dp"
-                android:layout_height="50dp" />
-
-            <Button
-                android:id="@+id/profileSkip"
-                android:layout_marginEnd="50dp"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:textAllCaps="false"
-                android:textColor="@color/TwitterBlue"
-                android:textStyle="bold"
-                android:text="Skip >>"
-                android:background="@color/White"
-                android:layout_gravity="bottom|end"
-                android:layout_width="60dp"
-                android:layout_height="40dp" />
-
-
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Submit" />
 
         </LinearLayout>
 
     </ScrollView>
-
-
 
 
 </LinearLayout>

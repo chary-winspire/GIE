@@ -7,7 +7,7 @@
         android:color="@color/LiteWhite"
         android:width="0.6dip"/>
 
-    <solid android:color="@android:color/transparent"/>
+    <solid android:color="@color/Black"/>
 
     <size android:width="100dp" android:height="100dp"/>
 

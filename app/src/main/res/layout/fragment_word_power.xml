@@ -3,35 +3,165 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="50dp"
-    android:layout_marginBottom="50dp">
+    android:layout_marginTop="50dp">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/wpRecylerView"
+        android:padding="10dp"
+        android:layout_below="@+id/divider5"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
 
-    <RelativeLayout
-        android:scrollbars="vertical"
+    <ImageView
+        android:id="@+id/logo_shareWP"
+        android:src="@drawable/winspire_go_logo"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:visibility="gone"
-        android:id="@+id/WordPowerLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="60dp" />
+
+    <ImageButton
+        android:id="@+id/shareWP"
+        android:src="@drawable/ic_sharethis"
+        android:layout_width="50dp"
+        android:background="@drawable/round_shape"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="60dp" />
+
+    <Button
+        android:id="@+id/Wordlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="40dp"
+        android:text="Full List"
+        android:textColor="@color/White"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/userpanel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@+id/userpanel"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/emoji_smile" />
+
+            <TextView
+                android:id="@+id/lerned"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="Learned"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/emoji_smile" />
+
+            <TextView
+                android:id="@+id/known"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Known"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="6dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:src="@drawable/emoji_smile"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:id="@+id/wordno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Viewing"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/userpanel"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#dfdcdc"
+        android:layout_height="2dp"/>
+
+
+    <RelativeLayout
+        android:id="@+id/WpfullView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/wpTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
             android:background="@color/LiteRedBTN"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:drawableEnd="@drawable/ic_paly_white"
             android:paddingRight="40dp"
-            android:textStyle="bold"
             android:text="dapper [ DAP-er ]"
-            android:textColor="#fff" />
+            android:textAllCaps="true"
+            android:textColor="#fff"
+            android:textSize="14sp" />
 
         <com.github.aakira.expandablelayout.ExpandableRelativeLayout
             android:id="@+id/expandableLayout"
@@ -39,38 +169,142 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/wpTitle"
             android:background="#909af1e9"
-            android:padding="16dp"
+            android:padding="10dp"
             app:ael_duration="400"
             app:ael_expanded="true"
             app:ael_interpolator="bounce"
             app:ael_orientation="vertical">
 
             <TextView
-                android:id="@+id/wpMeaning"
-                android:textColor="@color/Black"
-                android:text="@string/WPMeaning"
-                android:layout_marginBottom="6dp"
+                android:id="@+id/wpType"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:gravity="center"
+                android:text="Type"
+                android:textColor="@color/Black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/wpMeaning1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wpType"
+                android:layout_marginBottom="6dp"
+                android:text="Meaning1"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/wpMeaning2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wpMeaning1"
+                android:layout_marginBottom="6dp"
+                android:text="Meaning2"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/wpMeaning3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wpMeaning2"
+                android:layout_marginBottom="6dp"
+                android:text="Meaning3"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/wpMeaning4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wpMeaning3"
+                android:layout_marginBottom="6dp"
+                android:text="Meaning4"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
 
             <View
                 android:id="@+id/divider"
-                android:layout_below="@+id/wpMeaning"
-                android:background="@color/Black"
-                android:layout_marginBottom="6dp"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"/>
+                android:layout_height="2dp"
+                android:layout_below="@+id/wpMeaning4"
+                android:layout_marginBottom="6dp"
+                android:background="@color/Black" />
 
             <TextView
                 android:id="@+id/wpExample"
-                android:layout_below="@+id/divider"
-                android:textColor="@color/Black"
-                android:text="@string/WPExample"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider"
+                android:text="@string/WPExample"
+                android:textColor="@color/Black"
+                android:textSize="12sp" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/wpExample"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="6dp"
+                android:background="@color/Black" />
 
         </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp">
+
+            <ImageButton
+                android:id="@+id/nextWord"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_next" />
+
+            <Button
+                android:id="@+id/learnedWord"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@id/prevWord"
+                android:background="@color/GK"
+                android:gravity="center"
+                android:text="Learned"
+                android:textColor="@color/White" />
+
+            <Button
+                android:id="@+id/iKnowWord"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="14dp"
+                android:layout_toStartOf="@id/nextWord"
+                android:background="@color/Puzzle_Toolbar"
+                android:gravity="center"
+                android:text="I Know"
+                android:textColor="@color/White" />
+
+            <ImageButton
+                android:id="@+id/prevWord"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_back" />
+
+        </RelativeLayout>
+
     </RelativeLayout>
+
 
 </RelativeLayout>

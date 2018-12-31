@@ -2,7 +2,6 @@ package com.example.extarc.androidpushnotification;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -12,10 +11,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.design.widget.AppBarLayout;
+import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,16 +32,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.extarc.androidpushnotification.Models.Questionnaire;
-import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.extarc.androidpushnotification.MasterActivity.appBarLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.bottomNavigation;
 import static com.example.extarc.androidpushnotification.MasterActivity.drawerLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.fab;
@@ -64,12 +62,10 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
 
     RelativeLayout mainlayoutSpdm, startSpdmlayout;
 
-    private int timeleft = 150000;
     ArrayList<Questionnaire> arryJobDetails = new ArrayList<>();
     private final String TAG = "SpeedMathsFragment";
     private String questionnaireListStr = null;
 
-    DonutProgress donutProgress;
     CountDownTimer countDownTimer;
     private static final String FORMAT = "%02d:%02d:%02d";
     Animation animation, queAnim;
@@ -80,8 +76,9 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
 
     TextView question;
     RadioButton option1, option2, option3, option4;
-    RadioGroup radioGroup;
+    RadioGroup radioGroupSPDM;
     int count = 0;
+    int questionNu = 1;
     int ID = 1;
     public SharedPreferences preferences;
     int Score = 0;
@@ -89,6 +86,7 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
     int NotAttempted = 0;
 
     SeekBar seekbarTimer;
+    long timeLeft;
 
     String SERVICE_URI = ApplicationConstants.SERVER_PATH;
 
@@ -99,9 +97,9 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
         // Inflate the layout for this fragment
         final View myview = inflater.inflate(R.layout.speedmaths_view, container, false);
 
-        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         layoutParams.setMargins(0, 0, 0, 0);
-        toolbar.setLayoutParams(layoutParams);
+        appBarLayout.setLayoutParams(layoutParams);
 //        toolbar.setTitle("Speed Maths");
         toolbartitle2.setVisibility(View.VISIBLE);
         toolbartitle.setVisibility(View.INVISIBLE);
@@ -115,10 +113,10 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
         }
         bottomNavigation.setVisibility(View.GONE);
         fab.setVisibility(View.VISIBLE);
-        toolbar.setNavigationIcon(null);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
+//        toolbar.setNavigationIcon(null);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
 
         preferences = getActivity().getSharedPreferences(Constants.SP_PERSISTENT_VALUES,
                 Context.MODE_PRIVATE);
@@ -130,16 +128,17 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
         submit = myview.findViewById(R.id.submitSpdm);
         queNo = myview.findViewById(R.id.queNo);
         questionNo = myview.findViewById(R.id.questionCount);
-        questionNo.setText("0/10");
+        questionNo.setText("1/10");
+        questionNu = questionNu++;
 
         question = myview.findViewById(R.id.questionSpdm);
         option1 = myview.findViewById(R.id.spdmOp1);
         option2 = myview.findViewById(R.id.spdmOp2);
         option3 = myview.findViewById(R.id.spdmOp3);
         option4 = myview.findViewById(R.id.spdmOp4);
-        radioGroup = myview.findViewById(R.id.rgroupSpdm);
+        radioGroupSPDM = myview.findViewById(R.id.rgroupSpdm);
 
-        radioGroup.setOnCheckedChangeListener(this);
+        radioGroupSPDM.setOnCheckedChangeListener(this);
 
 //        donutProgress = (DonutProgress) myview.findViewById(R.id.donut_progress);
 //        donutProgress.setMax(100);
@@ -157,12 +156,16 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
         seekBar.setFocusable(false);
 
         seekbarTimer = myview.findViewById(R.id.seekbarSpdmtimer);
+        seekbarTimer.getThumb().mutate().setAlpha(0);
 
         startSpdmlayout.setVisibility(View.VISIBLE);
         mainlayoutSpdm.setVisibility(View.GONE);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                toolbar.setNavigationIcon(null);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
                 toolbartitle.setVisibility(View.INVISIBLE);
                 toolbartitle2.setVisibility(View.VISIBLE);
@@ -219,23 +222,23 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
                         if (option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             Log.i(TAG, " *** getQuestionnaire started" + arryJobDetails.get(count).getUserAnswer());
                             resetColor();
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.clearCheck();
                             option1.setChecked(true);
                             Log.i(TAG, " *** getQuestionnaire started" + option1.isChecked());
                         } else if (option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             resetColor();
-                            radioGroup.setBackgroundResource(android.R.drawable.btn_default);
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.setBackgroundResource(android.R.drawable.btn_default);
+                            radioGroupSPDM.clearCheck();
                             option2.setChecked(true);
                         } else if (option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             resetColor();
-                            radioGroup.setBackgroundResource(android.R.drawable.btn_default);
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.setBackgroundResource(android.R.drawable.btn_default);
+                            radioGroupSPDM.clearCheck();
                             option3.setChecked(true);
                         } else if (option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             resetColor();
-                            radioGroup.setBackgroundResource(android.R.drawable.btn_default);
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.setBackgroundResource(android.R.drawable.btn_default);
+                            radioGroupSPDM.clearCheck();
                             option4.setChecked(true);
                         }
                     }
@@ -247,12 +250,9 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
             @Override
             public void onClick(View view) {
 
-                int size = arryJobDetails.size();
-                questionNo.setText(count + 1 + "/" + size);
-
                 startQueAnimation();
                 Animation();
-                Log.i(TAG, " *** getQuestionnaire started" + radioGroup.getCheckedRadioButtonId());
+                Log.i(TAG, " *** getQuestionnaire started" + radioGroupSPDM.getCheckedRadioButtonId());
                 if (count > 0 || count == 0) {
                     String userAnswer = null;
                     if (option1.isChecked()) {
@@ -264,6 +264,9 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
                     } else if (option4.isChecked()) {
                         userAnswer = option4.getText().toString();
                     }
+
+                    questionNu = questionNu + 1;
+                    questionNo.setText(questionNu + "/" + arryJobDetails.size());
 
                     if (userAnswer != null) {
                         if (arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
@@ -292,26 +295,26 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
                     if (arryJobDetails.get(count).getUserAnswer() != null && arryJobDetails.get(count).getUserAnswer().length() > 0) {
                         if (option1.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             resetColor();
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.clearCheck();
                             option1.setChecked(true);
                         } else if (option2.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             resetColor();
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.clearCheck();
                             option2.setChecked(true);
                         } else if (option3.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             resetColor();
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.clearCheck();
                             option3.setChecked(true);
                         } else if (option4.getText().toString().equalsIgnoreCase(arryJobDetails.get(count).getUserAnswer())) {
                             resetColor();
-                            radioGroup.clearCheck();
+                            radioGroupSPDM.clearCheck();
                             option4.setChecked(true);
                         }
                     } else {
                         startQueAnimation();
                         Animation();
                         resetColor();
-                        radioGroup.clearCheck();
+                        radioGroupSPDM.clearCheck();
                         option1.setChecked(false);
                         option2.setChecked(false);
                         option3.setChecked(false);
@@ -329,36 +332,72 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
             }
         });
 
+        radioGroupSPDM.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if (count == 9) {
+                    if (option1.isChecked()) {
+                        option1.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        submit.performClick();
+                    } else if (option2.isChecked()) {
+                        option2.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        submit.performClick();
+                    } else if (option3.isChecked()) {
+                        option3.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        submit.performClick();
+                    } else if (option4.isChecked()) {
+                        option4.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        submit.performClick();
+                    }
+                } else {
+                    if (option1.isChecked()) {
+                        option1.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        nextQueDelay();
+                    } else if (option2.isChecked()) {
+                        option2.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        nextQueDelay();
+                    } else if (option3.isChecked()) {
+                        option3.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        nextQueDelay();
+                    } else if (option4.isChecked()) {
+                        option4.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
+                        nextQueDelay();
+                    }
+                }
+            }
+        });
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-                builder.setTitle("Are Sure you want to submit");
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+//                builder.setTitle("Are Sure you want to submit");
+//                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
 
-                        String userAnswer = null;
-                        if (option1.isChecked()) {
-                            userAnswer = option1.getText().toString();
-                        } else if (option2.isChecked()) {
-                            userAnswer = option2.getText().toString();
-                        } else if (option3.isChecked()) {
-                            userAnswer = option3.getText().toString();
-                        } else if (option4.isChecked()) {
-                            userAnswer = option4.getText().toString();
-                        }
+                String userAnswer = null;
+                if (option1.isChecked()) {
+                    userAnswer = option1.getText().toString();
+                } else if (option2.isChecked()) {
+                    userAnswer = option2.getText().toString();
+                } else if (option3.isChecked()) {
+                    userAnswer = option3.getText().toString();
+                } else if (option4.isChecked()) {
+                    userAnswer = option4.getText().toString();
+                }
 
-                        if (userAnswer != null) {
-                            if (arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
-                                Score = Score + 1;
-                            } else if (!arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
-                                Wrong = Wrong + 1;
-                            }
-                        } else {
-                            NotAttempted = NotAttempted + 1;
-                        }
+                if (userAnswer != null) {
+                    if (arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                        Score = Score + 1;
+                    } else if (!arryJobDetails.get(count).getAnswer().equalsIgnoreCase(userAnswer)) {
+                        Wrong = Wrong + 1;
+                    }
+                } else {
+                    NotAttempted = NotAttempted + 1;
+                }
 
 //                        arryJobDetails.get(9).setUserAnswer(userAnswer);
 //                        ListView listView = Objects.requireNonNull(getActivity()).findViewById(R.id.listviewSPDM);
@@ -366,32 +405,34 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
 //                        listView.setAdapter(customAdapter);
 //                        listView.setVisibility(View.VISIBLE);
 
-                        submit.setVisibility(View.INVISIBLE);
-                        Gson gson = new Gson();
-                        Intent intent = new Intent(getActivity(), ResultActivity.class);
-                        Log.d(TAG, "arrayjobdetails" + gson.toJson(arryJobDetails));
-                        intent.putExtra("userArray", gson.toJson(arryJobDetails));
+                submit.setVisibility(View.INVISIBLE);
+                Gson gson = new Gson();
+                Intent intent = new Intent(getActivity(), ResultActivity.class);
+                Log.d(TAG, "arrayjobdetails" + gson.toJson(arryJobDetails));
+                intent.putExtra("userArray", gson.toJson(arryJobDetails));
 //                        intent.putExtra("AnswersSPDM",arryJobDetails.get(count).getAnswer());
 //                        intent.putExtra("UserAnsSPDM",userAnswer);
 //                        intent.putExtra("CommentsSPDM",arryJobDetails.get(count).getComment());
 
-                        intent.putExtra("notattempted", NotAttempted);
-                        intent.putExtra("score", Score);
-                        intent.putExtra("wrong", Wrong);
-                        startActivity(intent);
+                intent.putExtra("notattempted", NotAttempted);
+                intent.putExtra("score", Score);
+                intent.putExtra("wrong", Wrong);
+                intent.putExtra("timeleftMilli", timeLeft);
+                startActivity(intent);
 
-                    }
-                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-//
-                    }
-                });
-                builder.show();
             }
-
         });
+//                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+////
+//                    }
+//                });
+//                builder.show();
+//            }
+//
+//        });
 
         return myview;
     }
@@ -402,24 +443,24 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
             case R.id.rgroupSpdm:
                 if (option1.isChecked()) {
                     option1.setBackgroundColor(getResources().getColor(R.color.myGreen));
-                    option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option2.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option3.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option4.setBackgroundColor(getResources().getColor(R.color.SPDM));
                 } else if (option2.isChecked()) {
                     option2.setBackgroundColor(getResources().getColor(R.color.myGreen));
-                    option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option1.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option3.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option4.setBackgroundColor(getResources().getColor(R.color.SPDM));
                 } else if (option3.isChecked()) {
                     option3.setBackgroundColor(getResources().getColor(R.color.myGreen));
-                    option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option2.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option1.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option4.setBackgroundColor(getResources().getColor(R.color.SPDM));
                 } else if (option4.isChecked()) {
                     option4.setBackgroundColor(getResources().getColor(R.color.myGreen));
-                    option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-                    option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+                    option2.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option3.setBackgroundColor(getResources().getColor(R.color.SPDM));
+                    option1.setBackgroundColor(getResources().getColor(R.color.SPDM));
                 }
                 break;
         }
@@ -532,7 +573,7 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
                         objJobDetails = gson.fromJson(jsonJob, Questionnaire.class);
                         arryJobDetails.add(objJobDetails);
                     }
-
+                    questionNo.setText("1/10");
                     question.setText(arryJobDetails.get(count).getQuestion());
                     option1.setText(arryJobDetails.get(count).getOption1());
                     option2.setText(arryJobDetails.get(count).getOption2());
@@ -586,27 +627,27 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
     public void CountControll() {
         if (count == 0) {
             back.setVisibility(View.INVISIBLE);
-            next.setVisibility(View.VISIBLE);
+            next.setVisibility(View.INVISIBLE);
         }
         if (count == 9) {
             next.setVisibility(View.INVISIBLE);
             back.setVisibility(View.INVISIBLE);
-            submit.setVisibility(View.VISIBLE);
+            submit.setVisibility(View.INVISIBLE);
         }
         if (count > 0) {
             back.setVisibility(View.INVISIBLE);
         }
         if (count <= 8) {
-            next.setVisibility(View.VISIBLE);
+            next.setVisibility(View.INVISIBLE);
             submit.setVisibility(View.INVISIBLE);
         }
     }
 
     public void resetColor() {
-        option1.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-        option2.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-        option3.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
-        option4.setBackgroundColor(getResources().getColor(R.color.GoldenYellow));
+        option1.setBackgroundColor(getResources().getColor(R.color.SPDM));
+        option2.setBackgroundColor(getResources().getColor(R.color.SPDM));
+        option3.setBackgroundColor(getResources().getColor(R.color.SPDM));
+        option4.setBackgroundColor(getResources().getColor(R.color.SPDM));
     }
 
     public void Animation() {
@@ -623,13 +664,16 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
     }
 
     public void startcountdown() {
-        countDownTimer = new CountDownTimer(150000, 1000) {
+        countDownTimer = new CountDownTimer(120000, 1000) {
             int i = 1000;
 
             @Override
             public void onTick(final long millSecondsLeftToFinish) {
                 long seconds = millSecondsLeftToFinish / 6000;
                 i = i - 1;
+                int progress = (int) (millSecondsLeftToFinish / 1200);
+                seekbarTimer.setProgress(progress);
+                timeLeft = millSecondsLeftToFinish;
 //                donutProgress.setProgress(i);
 
                 StartTimer.setText("" + String.format(FORMAT,
@@ -643,11 +687,26 @@ public class SpeedMathsFragment extends Fragment implements RadioGroup.OnChecked
             @Override
             public void onFinish() {
                 StartTimer.setText("Done!");
+                seekbarTimer.setProgress(0);
+                if (mainlayoutSpdm.isShown()){
+                    submit.performClick();
+                }else {
+                    countDownTimer.cancel();
+                }
 //                donutProgress.setProgress(0);
             }
         };
         countDownTimer.start();
 
+    }
+
+    public void nextQueDelay() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                next.performClick();
+            }
+        }, 150);
     }
 
 }

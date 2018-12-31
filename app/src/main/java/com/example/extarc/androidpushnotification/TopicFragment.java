@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.CardView;
@@ -27,6 +28,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static com.example.extarc.androidpushnotification.MasterActivity.appBarLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.bottomNavigation;
 import static com.example.extarc.androidpushnotification.MasterActivity.drawerLayout;
 import static com.example.extarc.androidpushnotification.MasterActivity.fab;
@@ -57,9 +59,9 @@ public class TopicFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
 
-        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         layoutParams.setMargins(0, 0, 0, 0);
-        toolbar.setLayoutParams(layoutParams);
+        appBarLayout.setLayoutParams(layoutParams);
         toolbartitle.setVisibility(View.GONE);
         toolbartitle2.setVisibility(View.VISIBLE);
         toolbartitle2.setText("Top Reads");
@@ -70,10 +72,12 @@ public class TopicFragment extends Fragment {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.Black));
         }
-        bottomNavigation.setVisibility(View.GONE);
+        bottomNavigation.setVisibility(View.VISIBLE);
         fab.setVisibility(View.VISIBLE);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        toolbar.setNavigationIcon(null);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        toolbar.setNavigationIcon(null);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_navigation_menu));
 
         ArrayList<WordPowerModel> TopicList = new ArrayList<>();
 
@@ -85,7 +89,7 @@ public class TopicFragment extends Fragment {
                 "How to Wake Up Early Every Day? 5 Simple Steps",
                 "",
                 "http://winspiremagazine.com/articles/index.php/2017/11/02/wake-early-every-day-5-simple-steps/"));
-       TopicList.add(new WordPowerModel("http://winspiremagazine.com/articles/wp-content/uploads/2017/11/personal-accountability-300x203.png",
+        TopicList.add(new WordPowerModel("http://winspiremagazine.com/articles/wp-content/uploads/2017/11/personal-accountability-300x203.png",
                 "How to Teach Kids the Value Personal Accountability",
                 "",
                 "http://winspiremagazine.com/articles/index.php/2017/11/02/teach-kids-value-personal-accountability/"));

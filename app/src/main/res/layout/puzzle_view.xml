@@ -3,27 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="50dp"
+    android:layout_marginTop="44dp"
+    android:background="@color/PageBackground"
     android:gravity="center"
     tools:context=".PuzzleFragment">
 
     <RelativeLayout
         android:id="@+id/layoutPuzzle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:gravity="center">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/questionPuzzle"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="6dp"
-            android:background="#b7e6c0"
-            android:gravity="center"
-            android:padding="6dp"
+            android:layout_marginTop="14dp"
+            android:padding="10dp"
             android:text="Puzzle Question"
             android:textColor="@color/Black"
             android:textSize="16sp" />
@@ -46,63 +43,59 @@
 
             <RadioButton
                 android:id="@+id/puzzleOp1"
-                android:layout_width="240dp"
-                android:layout_height="46dp"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="2dp"
                 android:background="@drawable/btn_puzzle"
                 android:button="@null"
                 android:gravity="center"
+                android:padding="10dp"
                 android:text="Option One"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/puzzleOp2"
-                android:layout_width="240dp"
-                android:layout_height="46dp"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="2dp"
                 android:background="@drawable/btn_puzzle"
                 android:button="@null"
                 android:gravity="center"
+                android:padding="10dp"
                 android:text="Option Two"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/puzzleOp3"
-                android:layout_width="240dp"
-                android:layout_height="46dp"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="2dp"
                 android:background="@drawable/btn_puzzle"
                 android:button="@null"
                 android:gravity="center"
+                android:padding="10dp"
                 android:text="Option Three"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/puzzleOp4"
-                android:layout_width="240dp"
-                android:layout_height="46dp"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="2dp"
                 android:background="@drawable/btn_puzzle"
                 android:button="@null"
                 android:gravity="center"
+                android:padding="10dp"
                 android:text="Option Four"
                 android:textColor="@color/White"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
         </RadioGroup>
 
@@ -128,7 +121,8 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="submit"
-            android:textColor="@color/White" />
+            android:textColor="@color/White"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -169,22 +163,19 @@
         android:id="@+id/ansLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_margin="6dp"
-        android:visibility="gone"
         android:gravity="center"
-        android:padding="6dp">
+        android:padding="6dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/questionReview"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_margin="6dp"
-            android:background="#b7e6c0"
-            android:gravity="center|top"
-            android:padding="6dp"
+            android:gravity="top"
             android:text="Puzzle Question"
             android:textColor="@color/Black"
             android:textSize="16sp" />
@@ -199,31 +190,30 @@
             android:background="?android:attr/listDivider" />
 
         <LinearLayout
-            android:layout_below="@+id/divider1"
             android:id="@+id/userAnsPuzzlepanel"
-            android:orientation="horizontal"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="40dp">
+            android:layout_height="40dp"
+            android:layout_below="@+id/divider1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/ansImage"
-                android:layout_marginStart="12dp"
                 android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                android:layout_marginStart="12dp" />
 
             <TextView
                 android:id="@+id/AnsPuzzle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="12dp"
+                android:gravity="center|start"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:gravity="center|start"
                 android:text="Answer"
                 android:textSize="20sp" />
-
-
         </LinearLayout>
 
 
@@ -234,32 +224,72 @@
             android:layout_below="@+id/userAnsPuzzlepanel"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="?android:attr/listDivider" />
+            android:background="?android:attr/listDivider"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/explanationtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider1"
+            android:text="Explanation:"
+            android:textColor="@color/Black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/explanationReview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/divider2"
-            android:gravity="center"
-            android:background="@drawable/btn_puzzle"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/explanationtext"
+            android:layout_marginTop="6dp"
             android:text="Something Text"
-            android:textColor="@color/White"
+            android:textColor="@color/Black"
             android:textSize="16sp"
             android:textStyle="normal" />
 
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/sharePuzzleReview"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
+    <Button
+        android:id="@+id/sharePuzzle"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/round_shape"
-        android:src="@drawable/ic_sharethis" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="60dp"
+        android:background="@color/White"
+        android:drawableStart="@drawable/ic_share"
+        android:padding="10dp"
+        android:text="Share this Puzzle"
+        android:textAllCaps="false"
+        android:textSize="12sp" />
+
+    <ImageButton
+        android:id="@+id/winspirelogo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:visibility="gone"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/winspire_go_logo"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/seeAnsPuzzle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/Puzzle_Toolbar"
+        android:text="Review"
+        android:textAllCaps="false"
+        android:textColor="@color/White"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

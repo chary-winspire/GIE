@@ -18,7 +18,7 @@
     <color name="ColorWhite">#FFFFFF</color>
     <color name="ColorBlack">#FF615D5D</color>
     <color name="ColorGrey">#0abbb5</color>
-    <color name="ColorLightGrey">#FFE6E1E0</color>
+    <color name="ColorLightGrey">#e6e1e0</color>
 
     <color name="LiteBlack">#393434</color>
     <color name="Black">#000000</color>
@@ -29,7 +29,7 @@
     <color name="TwitterBlue">#1DA1F2</color>
     <color name="LiteBlueDark">#008fe7</color>
     <color name="GooglePlusRed">#DB4437</color>
-    <color name="LiteGreen">#40fd1a</color>
+    <color name="LiteGreen">#21b703</color>
     <color name="LitePurpul">#a45aec</color>
     <color name="LitePink">#de419e</color>
     <color name="LiteBlue">#92fffc</color>
@@ -44,14 +44,23 @@
 
     <color name="myGreen">#3A5F0B</color>
     <color name="myGreenlite">#FF00FF00</color>
+    <color name="DarkGreen">#0b4000</color>
 
 
     <color name="SPDM_Toolbar">#FFC20D</color>
+    <color name="SPDM">#FFBA00</color>
     <color name="SPDM_normal">#f4ecc6</color>
+    <color name="SPDM_dark">#937902</color>
     <color name="Topic_Toolbar">#fb094a9b</color>
     <color name="Puzzle_Toolbar">#2F8B43</color>
-    <color name="GK_Toolbar">#F05128</color>
+    <color name="GK">#ec6947</color>
     <color name="GK_normal">#edbfb3</color>
+    <color name="GK_dark">#FFF4481B</color>
+    <color name="Word">#C02125</color>
+    <color name="Word_normal">#b97677</color>
+    <color name="Word_dark">#730003</color>
+    <color name="ToDo">#535252</color>
+
 
 
 </resources>
