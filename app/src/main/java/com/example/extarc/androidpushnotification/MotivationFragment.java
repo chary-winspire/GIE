@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -32,11 +31,12 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.extarc.androidpushnotification.Models.Questionnaire;
-import com.example.extarc.androidpushnotification.Services.DownloadImageTask;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -64,6 +64,7 @@ import static com.example.extarc.androidpushnotification.MasterActivity.toolbar;
 import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle;
 import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle2;
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.facebook.FacebookSdk.getFacebookDomain;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,12 +85,15 @@ public class MotivationFragment extends Fragment {
     public SharedPreferences preferences;
     AlertDialog alertDialog;
     AlertDialog.Builder dialogBuilder;
+    LinearLayout layoutCount;
 
     private int STORAGE_PERMISSION_CODE = 23;
     String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
     private String imageName = "Motivation";
     private File imagePath = new File(directory_Moti + "/" + imageName + timeStamp + ".jpeg");
     public static ImageButton shareit;
+    ImageView icon_logo;
+    ProgressBar progressBar;
 
     public MotivationFragment() {
         // Required empty public constructor
@@ -102,31 +106,27 @@ public class MotivationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_motivation, container, false);
 
         ivMotiLayout = view.findViewById(R.id.ivMotivationLayout);
-        //ivMotiLayout.setVisibility(View.GONE);
 
         shareit = view.findViewById(R.id.shareMoti);
+        icon_logo = view.findViewById(R.id.iv_icon);
+        icon_logo.setVisibility(View.GONE);
         shareit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ivMotiLayout.setVisibility(View.VISIBLE);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //First checking if the app is already having the permission
-                        if (isStorageReadable()) {
-                            //If permission is already having then showing the toast
-                            Bitmap bitmap = takeScreenshot();
-                            saveBitmap(bitmap, imageName);
-                            shareIt();
-                            //Existing the method with return
-                        }else {
-                            //If the app has not the permission then asking for the permission
-                            requestStoragePermission();
-                        }
-                    }
-                }, 200);
-
+                //First checking if the app is already having the permission
+                if (isStorageReadable()) {
+                    //If permission is already having then showing the toast
+                    Bitmap bitmap = takeScreenshot();
+                    saveBitmap(bitmap, imageName);
+                    shareIt();
+                    //Existing the method with return
+                } else {
+                    //If the app has not the permission then asking for the permission
+                    requestStoragePermission();
+                }
+                getFragmentManager().beginTransaction().replace(R.id.mainFragment, new MotivationFragment()).commit();
             }
+
         });
 
 //        /* adapt the image to the size of the display */
@@ -168,6 +168,8 @@ public class MotivationFragment extends Fragment {
         layout1 = view.findViewById(R.id.previousLayout1);
         layout2 = view.findViewById(R.id.previousLayout2);
         motivationLayout = view.findViewById(R.id.motivationLayout);
+        layoutCount = view.findViewById(R.id.layoutCount);
+        progressBar = view.findViewById(R.id.Moti_progressbar);
 
         new ProgressTask().execute();
 
@@ -225,33 +227,47 @@ public class MotivationFragment extends Fragment {
     private class ProgressTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
-            ShowProgressDialog();
-            motivationLayout.setVisibility(View.INVISIBLE);
+//            ShowProgressDialog();
+            progressBar.setVisibility(View.VISIBLE);
+            motivationLayout.setVisibility(View.GONE);
+            shareit.setVisibility(View.GONE);
+            layoutCount.setVisibility(View.GONE);
+            Log.d(TAG, "PreExecuteProgressTask" + "Called");
+
+            if (!CheckNetwork.isInternetAvailable(getActivity())) { //returns true if internet available
+                setAlertDialog();
+//                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            if (netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.isConnected() && netInfo.isAvailable()) {
+            Log.d(TAG, "doinBacgroProgressTask" + "Called");
+            if (CheckNetwork.isInternetAvailable(getActivity())) { //returns true if internet available
+                //do something. loadwebview.
                 getNotificationDetails(ID, "MOT");
             }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (notiList != null) {
+                Log.d(TAG, "notiList " + notiList.size());
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            if (isOnline()) {
-                alertDialog.dismiss();
-                motivationLayout.setVisibility(View.VISIBLE);
-            } else {
-                setAlertDialog();
-            }
+//            if (isOnline()) {
+//                alertDialog.dismiss();
+//                motivationLayout.setVisibility(View.VISIBLE);
+//            } else {
+//                setAlertDialog();
+//            }
+            Log.d(TAG, "PostExecProgressTask" + "Called");
+
+            progressBar.setVisibility(View.GONE);
+//                alertDialog.dismiss();
+            motivationLayout.setVisibility(View.VISIBLE);
+            shareit.setVisibility(View.VISIBLE);
+            layoutCount.setVisibility(View.VISIBLE);
         }
     }
 
@@ -260,8 +276,7 @@ public class MotivationFragment extends Fragment {
             @Override
             protected String doInBackground(Void... params) {
                 String url = "/getQuestionnaire?id=" + id + "&type=" + type;
-                ;
-                ;
+
                 String JsonResponse = null;
                 try {
 
@@ -296,7 +311,6 @@ public class MotivationFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -327,8 +341,9 @@ public class MotivationFragment extends Fragment {
         }
         if (index >= 0 && index < notiList.size()) {
             String url = ApplicationConstants.SERVER_PATH + "getImage?imageName=" + notiList.get(index).getQuestion();
+            Glide.with(getActivity().getApplicationContext()).load(url).thumbnail(0.1f).into(motiimage);
             Log.d(TAG, "Image url Called" + url);
-            new DownloadImageTask(imageView).execute(url);
+//            new DownloadImageTask(imageView).execute(url);
         }
     }
 
@@ -345,18 +360,19 @@ public class MotivationFragment extends Fragment {
     public void setAlertDialog() {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getContext());
         builder.setTitle("No internet !");
-        builder.setMessage("Please Try again after some time");
+        builder.setMessage("Please try again after some time");
         builder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
+//                alertDialog.dismiss();
+                new ProgressTask().execute();
             }
         });
         builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                alertDialog.dismiss();
+//                alertDialog.dismiss();
                 if (getFragmentManager() != null) {
                     getFragmentManager().beginTransaction().replace(R.id.mainFragment, new CategoriesFragment()).commit();
                 }
@@ -436,8 +452,7 @@ public class MotivationFragment extends Fragment {
             if (f.exists()) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                try
-                {
+                try {
                     bitmap = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
                     Bitmap output = imageWatermark.addWatermark(getResources(), bitmap);
                     /*save image to sdcard*/
@@ -447,8 +462,7 @@ public class MotivationFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -21,6 +21,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -62,6 +64,8 @@ import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle;
+import static com.example.extarc.androidpushnotification.MasterActivity.toolbartitle2;
 
 public class ResultActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 

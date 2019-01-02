@@ -43,12 +43,15 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
@@ -67,13 +70,17 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private Button loginEmail;
     private LinearLayout loginwithEmail;
     Context applicationContext;
-    private GoogleApiClient googleApiClient;
-    private static final int REQ_CODE = 9001;
+
     String TAG = "LoginRegister";
     private static final String EMAIL = "email";
+    public SharedPreferences preferences;
+
+    private static final int REQ_CODE = 9001;
+    private GoogleApiClient googleApiClient;
     private CallbackManager callbackManager;
     private ProfileTracker mProfileTracker;
-    public SharedPreferences preferences;
+    GoogleSignInAccount googleSignInAccount;
+    GoogleSignInClient googleSignInClient;
 
     private EditText emailID, mobileNo, enterOTP;
     private Button submit;
@@ -85,11 +92,13 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
-
 
         applicationContext = getApplicationContext();
         preferences = getSharedPreferences(Constants.SP_PERSISTENT_VALUES,
@@ -120,10 +129,6 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         Log.i(TAG, "SharedPreferences PersistentValues File commit: " + persistentValues.getAll().toString());
         storeFCMToken(token,deviceID);
 
-
-        getotp = findViewById(R.id.getOtp);
-        getotp.setOnClickListener(this);
-
         guest = findViewById(R.id.btnSkip);
         guest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +156,8 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         google = findViewById(R.id.google);
         fb.setOnClickListener(this);
         google.setOnClickListener(this);
-
+        getotp = findViewById(R.id.getOtp);
+        getotp.setOnClickListener(this);
         emailID = findViewById(R.id.userEmail);
         mobileNo = findViewById(R.id.userMobile);
         enterOTP = findViewById(R.id.enterOtp);
@@ -255,31 +261,41 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCancel() {
                 // App code
-
             }
 
             @Override
             public void onError(FacebookException exception) {
                 // App code
-
             }
         });
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 
         //  LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
         GSignin = findViewById(R.id.googleLogin);
         GSignin.setOnClickListener(this);
+
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
+
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
+
     }
 
-    private void storeFCMToken(final String FCMToken,final String deviceID) {
+    @Override
+    protected void onStart() {
+        googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        super.onStart();
+    }
+
+    private void storeFCMToken(final String FCMToken, final String deviceID) {
         new AsyncTask<Void, Void, String>() {
             String JsonResponse = null;
             @Override
@@ -359,6 +375,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
             Log.d(TAG, "googleSignInSuccess");
         } else {
             Log.d(TAG, "googleSignInFailure");
+            Log.d(TAG, "GoogleSigninResult :" + result.isSuccess() + " - " + result.getStatus());
             Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
             result.getStatus().getStatusMessage();
         }
@@ -368,11 +385,18 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
             startActivityForResult(intent, REQ_CODE);
     }
+
+    private void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, REQ_CODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "googleSignInFailure"+requestCode);
+
         if (requestCode == REQ_CODE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             HandleResult(result);
@@ -409,7 +433,8 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.googleLogin:
-                SignIn();
+//                SignIn();
+                signIn();
                 Intent intent = new Intent(LoginRegister.this, MasterActivity.class);
                 startActivity(intent);
                 break;
@@ -417,7 +442,8 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                 fbLogin.performClick();
                 break;
             case R.id.google:
-                SignIn();
+//                SignIn();
+                signIn();
                 break;
             case R.id.getOtp:
                 enterOTP.setEnabled(true);
